@@ -6,12 +6,12 @@
   --bg2:#9333ea;
   --bg3:#c084fc;
   --accent:#34d399;
-  --accent2:#a7f3d0;
+  --accent2:#f5894a;
   --card: rgba(255,255,255,0.06);
   --glass: rgba(255,255,255,0.04);
   --text: #eef2ff;
   --muted: #5bf0e6;
-  --verde: #8bd9bd;
+  --verde: #a02a83;
   --radius:14px;
   --shadow: 0 12px 30px rgba(10,8,15,0.45);
 }
@@ -117,9 +117,9 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 .slide img { width:100%; height:100%; object-fit:cover; }
 
 .card-info { padding:12px 16px; text-align:center; }
-.card-info h3 { font-size:1.3rem; margin-bottom:4px; color: var(--accent2); }
-.card-info p { font-size:0.95rem; margin-bottom:6px; color: var(--accent); }
-.card-info .loc { font-size:0.9rem; color: var(--accent); }
+.card-info h3 { font-size:1.3rem; margin-bottom:4px; color: #d33471; }
+.card-info p { font-size:0.95rem; margin-bottom:6px; color: #2a4dbe; }
+.card-info .loc { font-size:0.9rem; color: #be2a9e; }
 
 @keyframes slideLeft {
   0% { transform: translateX(0); }
@@ -152,10 +152,10 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
   backdrop-filter: blur(6px); text-align:center; margin:40px auto;
   animation: fadeIn 0.8s ease-in-out;
 }
-.registro-container h2 { margin-bottom:18px; font-size:24px; color:#56e38e; }
+.registro-container h2 { margin-bottom:18px; font-size:24px; color:#8a3b28; }
 
 .form-group { margin-bottom:14px; text-align:left; }
-label { display:block; font-weight:600; margin-bottom:6px; font-size:13px; color:#71f5a5; }
+label { display:block; font-weight:600; margin-bottom:6px; font-size:13px; color:#116d36; }
 input, textarea {
   width: 100%; padding:9px 12px; border:1px solid #ccc; border-radius:10px; font-size:14px;
   transition:border 0.3s, box-shadow 0.3s;
