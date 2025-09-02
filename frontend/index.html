@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad DT</div>
+      <div class="brand">Comunidad DT Ver 3.01</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -45,6 +45,10 @@
 conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div>
     </div>
 
+
+       <div style="display:flex;gap:14px;align-items:center;">
+             <div id="contadorVisitas">Visitas: 0</div>
+      </div>
      </header>
 
 
@@ -206,48 +210,89 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
     <textarea id="descripcion" placeholder="Breve descripción..." required></textarea>
   </div>
 
+<div class="form-group">
+  <label for="imagenes">Carga hasta 3 imágenes de tu negocio</label>
+  
+  <!-- Botón estilizado -->
+  <label for="imagenes" class="btn-upload">📸 Seleccionar imágenes</label>
+  
+  <!-- Input real oculto -->
+  <input 
+    type="file" 
+    id="imagenes" 
+    name="imagenes[]" 
+    accept="image/*" 
+    multiple 
+    onchange="validarMaximoImagenes(this)">
+</div>
+
+
   <button type="submit" class="btn-submit">Registrar mi negocio</button>
 </form>
 
 <script>
-  const form = document.getElementById("regForm");
+const form = document.getElementById("regForm");
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault(); // Evitar envío por defecto
+form.addEventListener("submit", async function(e) {
+  e.preventDefault(); // Evitar envío por defecto
 
-    let valido = true;
-    const contacto = document.getElementById("contacto");
-    const telefono = document.getElementById("telefono");
-    const descripcion = document.getElementById("descripcion");
+  const contacto = document.getElementById("contacto");
+  const telefono = document.getElementById("telefono");
+  const descripcion = document.getElementById("descripcion");
+  const imagenes = document.getElementById("imagenes"); // input file
 
-    // Validación simple
-    [contacto, telefono, descripcion].forEach(campo => {
-      if (!campo.value.trim()) {
-        campo.classList.add("invalid");
-        valido = false;
-      } else {
-        campo.classList.remove("invalid");
-      }
+  let valido = true;
+  [contacto, telefono, descripcion].forEach(campo => {
+    if (!campo.value.trim()) {
+      campo.classList.add("invalid");
+      valido = false;
+    } else {
+      campo.classList.remove("invalid");
+    }
+  });
+  if (!valido) return;
+
+  // --- 1. Enviar a WhatsApp ---
+  const mensaje = `Nuevo registro de negocio:%0A` +
+                  `Nombre de contacto: ${contacto.value}%0A` +
+                  `Teléfono: ${telefono.value}%0A` +
+                  `Descripción: ${descripcion.value}`;
+
+  const numeroWhats = "5215527618631"; 
+  const url = `https://wa.me/${numeroWhats}?text=${mensaje}`;
+  window.open(url, "_blank");
+
+  // --- 2. Enviar al backend para guardar en DB ---
+  try {
+    const formData = new FormData();
+    formData.append('nobredenegocio', contacto.value); // aquí puedes adaptar el nombre del negocio si lo tienes
+    formData.append('propietario', contacto.value);
+    formData.append('telnegocio', telefono.value);
+    formData.append('descripcionnegocio', descripcion.value);
+
+    // Adjuntar imagenes (solo 1 por simplicidad, o guardar la ruta)
+    if(imagenes.files.length > 0){
+      formData.append('imagen', imagenes.files[0]); 
+      // para múltiples imágenes habría que guardarlas y enviar sus rutas
+    }
+
+    const res = await fetch('http://localhost:3000/api/negocios', {
+      method: 'POST',
+      body: formData
     });
 
-    if (!valido) return;
+    const msg = await res.text();
+    console.log(msg);
+  } catch(err) {
+    console.error('Error al guardar en DB:', err);
+  }
 
-    // Construir mensaje para WhatsApp
-    const mensaje = `Nuevo registro de negocio:%0A` +
-                    `Nombre de contacto: ${contacto.value}%0A` +
-                    `Teléfono: ${telefono.value}%0A` +
-                    `Descripción: ${descripcion.value}`;
+  // Limpiar formulario
+  form.reset();
+});
 
-    // Número de WhatsApp (ejemplo: México +52 55 1234 5678)
-    const numeroWhats = "5215527618631"; 
-    const url = `https://wa.me/${numeroWhats}?text=${mensaje}`;
 
-    // Abrir WhatsApp en nueva ventana/pestaña
-    window.open(url, "_blank");
 
-    // Limpiar formulario
-    form.reset();
-  });
 </script>
 
 
@@ -259,9 +304,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
     <!-- Footer -->
     <footer class="site-footer">
       <div>© 2025 Comunidad Digital Texcoco</div>
-      <div style="display:flex;gap:14px;align-items:center;">
-             <div id="contadorVisitas">Visitas: 0</div>
-      </div>
+   
     </footer>
   </main>
 
