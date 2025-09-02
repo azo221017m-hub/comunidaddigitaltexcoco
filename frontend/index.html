@@ -211,10 +211,10 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
   </div>
 
 <div class="form-group">
-  <label for="imagenes">Carga hasta 3 imágenes de tu negocio</label>
+  <label for="imagenes">Carga el logo de tu negocio</label>
   
   <!-- Botón estilizado -->
-  <label for="imagenes" class="btn-upload">📸 Seleccionar imágenes</label>
+  <label for="imagenes" class="btn-upload">📸 Seleccionar la mi logo</label>
   
   <!-- Input real oculto -->
   <input 
@@ -222,7 +222,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
     id="imagenes" 
     name="imagenes[]" 
     accept="image/*" 
-    multiple 
+    single
     onchange="validarMaximoImagenes(this)">
 </div>
 
@@ -240,27 +240,24 @@ form.addEventListener("submit", async function(e) {
   const telefono = document.getElementById("telefono");
   const descripcion = document.getElementById("descripcion");
   const imagenes = document.getElementById("imagenes"); // input file
+  
+let waAbierto = false;
 
-  let valido = true;
-  [contacto, telefono, descripcion].forEach(campo => {
-    if (!campo.value.trim()) {
-      campo.classList.add("invalid");
-      valido = false;
-    } else {
-      campo.classList.remove("invalid");
-    }
-  });
-  if (!valido) return;
 
-  // --- 1. Enviar a WhatsApp ---
-  const mensaje = `Nuevo registro de negocio:%0A` +
-                  `Nombre de contacto: ${contacto.value}%0A` +
-                  `Teléfono: ${telefono.value}%0A` +
-                  `Descripción: ${descripcion.value}`;
+  if (!waAbierto) {
+    const mensaje = `Nuevo registro de negocio:%0A` +
+                    `Nombre de contacto: ${contacto.value}%0A` +
+                    `Teléfono: ${telefono.value}%0A` +
+                    `Descripción: ${descripcion.value}`;
 
-  const numeroWhats = "5215527618631"; 
-  const url = `https://wa.me/${numeroWhats}?text=${mensaje}`;
-  window.open(url, "_blank");
+    const numeroWhats = "5215527618631"; 
+    const url = `https://wa.me/${numeroWhats}?text=${mensaje}`;
+
+    window.open(url, "_blank");
+    waAbierto = true; // ahora ya no se volverá a abrir
+  }
+
+
 
   // --- 2. Enviar al backend para guardar en DB ---
   try {
