@@ -208,6 +208,48 @@ textarea { resize: vertical; min-height:70px; }
 input.invalid, textarea.invalid { border:2px solid red; background:#ffecec; }
 
 
+/* CSS */
+.aviso-container {
+  position: relative;
+  display: inline-block;
+}
+
+.aviso-link {
+  cursor: pointer;
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.aviso-bubble {
+  position: absolute;
+  bottom: 125%; /* Ajusta la posición */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  padding: 15px;
+  background-color: rgba(0,0,0,0.9);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 19px;
+  text-align: left;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Flecha de la burbuja */
+.aviso-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* apunta hacia el texto */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.9) transparent transparent transparent;
+}
 
 
 

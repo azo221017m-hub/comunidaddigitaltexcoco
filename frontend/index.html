@@ -228,6 +228,19 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 
 
   <button type="submit" class="btn-submit">Registrar mi negocio</button>
+
+<div class="aviso-container">
+  <span id="avisoToggle" class="aviso-link">AVISO DE PRIVACIDAD</span>
+  <div id="avisoBubble" class="aviso-bubble">
+    <h4>Aviso de Privacidad</h4>
+    <p>
+      Este sitio web respeta tu privacidad. Los datos recolectados serán usados únicamente
+      para fines de registro y contacto de negocios, conforme a la Ley de Protección de Datos.
+      No compartimos información con terceros sin tu consentimiento.
+    </p>
+  </div>
+</div>
+
 </form>
 
 <script>
@@ -360,6 +373,27 @@ if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').ma
   document.querySelectorAll('.bg-animated .orb').forEach(o=> o.style.animation = 'none');
   document.querySelectorAll('.slides .slide').forEach(s=> s.style.transition = 'none');
 }
+
+
+
+// JavaScript
+const avisoLink = document.getElementById('avisoToggle');
+const avisoBubble = document.getElementById('avisoBubble');
+
+avisoLink.addEventListener('click', () => {
+  // Alterna la visibilidad de la burbuja
+  avisoBubble.style.display = avisoBubble.style.display === 'block' ? 'none' : 'block';
+});
+
+// Opcional: cerrar la burbuja al hacer click fuera
+document.addEventListener('click', (e) => {
+  if (!avisoLink.contains(e.target) && !avisoBubble.contains(e.target)) {
+    avisoBubble.style.display = 'none';
+  }
+});
+
+
+
 </script>
 </body>
 </html>
