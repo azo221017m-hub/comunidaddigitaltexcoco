@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 // Servir archivos estáticos (tu carpeta frontend)
 app.use(express.static('../frontend'));
 
-// Ruta por defecto -> index.html
+//     Ruta por defecto -> index.html
 app.get('/', (req, res) => {
   res.sendFile('index.html', { root: '../frontend' });
 });
