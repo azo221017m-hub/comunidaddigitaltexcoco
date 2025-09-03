@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad DT Ver 4.01</div>
+      <div class="brand">Comunidad DT Ver 3.01</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -192,7 +192,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 
 <section class="registro-container">
     <h2>Registra tu Negocio en nuestra Comunidad Digital</h2>
-   
+
 
 <form id="regForm">
   <div class="form-group">
@@ -212,10 +212,10 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 
 <div class="form-group">
   <label for="imagenes">Carga el logo de tu negocio</label>
-  
+
   <!-- Botón estilizado -->
   <label for="imagenes" class="btn-upload">📸 Seleccionar la mi logo</label>
-  
+
   <!-- Input real oculto -->
   <input 
     type="file" 
@@ -244,68 +244,64 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 </form>
 
 <script>
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
-const uploadDir = path.join(__dirname, 'uploads');
-const fileInput = document.getElementById("imagen");
-  const formData = new FormData();
-formData.append("imagen", fileInput.files[0]); // adjuntar archivo
-
 const form = document.getElementById("regForm");
-let waAbierto = false; // fuera del submit
 
 form.addEventListener("submit", async function(e) {
-  e.preventDefault();
+  e.preventDefault(); // Evitar envío por defecto
 
-  const contacto = document.getElementById("contacto").value;
-  const telefono = document.getElementById("telefono").value;
-  const descripcion = document.getElementById("descripcion").value;
-  const imagenes = document.getElementById("imagenes");
+  const contacto = document.getElementById("contacto");
+  const telefono = document.getElementById("telefono");
+  const descripcion = document.getElementById("descripcion");
+  const imagenes = document.getElementById("imagenes"); // input file
 
-  if (!contacto || !telefono || !descripcion) {
-    alert("Completa todos los campos");
-    return;
-  }
+let waAbierto = false;
 
-  // --- 1. Abrir WhatsApp solo una vez ---
+
   if (!waAbierto) {
-    const mensaje = `Nuevo registro de negocio:%0ANombre de contacto: ${contacto}%0ATeléfono: ${telefono}%0ADescripción: ${descripcion}`;
+    const mensaje = `Nuevo registro de negocio:%0A` +
+                    `Nombre de contacto: ${contacto.value}%0A` +
+                    `Teléfono: ${telefono.value}%0A` +
+                    `Descripción: ${descripcion.value}`;
+
     const numeroWhats = "5215527618631"; 
     const url = `https://wa.me/${numeroWhats}?text=${mensaje}`;
+
     window.open(url, "_blank");
-    waAbierto = true;
+    waAbierto = true; // ahora ya no se volverá a abrir
   }
 
-  // --- 2. Enviar a backend ---
+
+
+  // --- 2. Enviar al backend para guardar en DB ---
   try {
     const formData = new FormData();
-    formData.append("nobredenegocio", contacto); // o el nombre real del negocio
-    formData.append("propietario", contacto);
-    formData.append("telnegocio", telefono);
-    formData.append("descripcionnegocio", descripcion);
+    formData.append('nobredenegocio', contacto.value); // aquí puedes adaptar el nombre del negocio si lo tienes
+    formData.append('propietario', contacto.value);
+    formData.append('telnegocio', telefono.value);
+    formData.append('descripcionnegocio', descripcion.value);
 
-    if (imagenes.files.length > 0) {
-      // solo adjunta, el backend se encarga de guardarlas
-      for (let i = 0; i < imagenes.files.length; i++) {
-        formData.append("imagenes", imagenes.files[i]);
-      }
+    // Adjuntar imagenes (solo 1 por simplicidad, o guardar la ruta)
+    if(imagenes.files.length > 0){
+      formData.append('imagen', imagenes.files[0]); 
+      // para múltiples imágenes habría que guardarlas y enviar sus rutas
     }
 
-    const API_URL = "https://comunidaddigital.onrender.com";
-    const res = await fetch(`${API_URL}/api/negocios`, {
-      method: "POST",
+    const res = await fetch('http://localhost:3000/api/negocios', {
+      method: 'POST',
       body: formData
     });
 
     const msg = await res.text();
-    alert(msg);
-    form.reset();
-
+    console.log(msg);
   } catch(err) {
-    console.error("Error al guardar en DB:", err);
-    alert("Error al guardar en la base de datos");
+    console.error('Error al guardar en DB:', err);
   }
+
+  // Limpiar formulario
+  form.reset();
 });
+
+
 
 </script>
 
@@ -318,7 +314,7 @@ form.addEventListener("submit", async function(e) {
     <!-- Footer -->
     <footer class="site-footer">
       <div>© 2025 Comunidad Digital Texcoco</div>
-   
+
     </footer>
   </main>
 
