@@ -35,27 +35,22 @@ const upload = multer({ storage: storage });
 
 
 // Ruta para guardar negocio
-router.post("/negocios", upload.single("imagen"), (req, res) => {
+app.post('/api/negocios', upload.single('imagen'), (req, res) => {
   const { nobredenegocio, propietario, telnegocio, descripcionnegocio } = req.body;
   const imagen = req.file ? req.file.filename : null;
 
-  const sql = `
-    INSERT INTO negociostbl 
-    (nobredenegocio, propietario, telnegocio, descripcionnegocio, imagen, fecharegistro, estatusnegocio)
-    VALUES (?, ?, ?, ?, ?, NOW(), 1)
-  `;
+  const sql = `INSERT INTO negociostbl 
+    (nobredenegocio, propietario, telnegocio, descripcionnegocio, imagen) 
+    VALUES (?, ?, ?, ?, ?)`;
 
   db.query(sql, [nobredenegocio, propietario, telnegocio, descripcionnegocio, imagen], (err, result) => {
     if (err) {
-      console.error("❌ Error al insertar:", err);
+      console.error("❌ Error al guardar en DB:", err);
       return res.status(500).send("Error al guardar en la BD");
     }
-    console.log("✅ Registro insertado:", result.insertId);
-    res.send("Negocio guardado correctamente");
+    res.send("✅ Negocio registrado correctamente");
   });
 });
-
-module.exports = router;
 
 
 
