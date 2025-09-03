@@ -246,6 +246,10 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 <script>
 const form = document.getElementById("regForm");
 
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+
+
 form.addEventListener("submit", async function(e) {
   e.preventDefault(); // Evitar envío por defecto
 

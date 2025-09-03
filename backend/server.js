@@ -7,6 +7,8 @@ const db = require('./db');
 const path = require('path');
 const router = express.Router();
 const PORT = process.env.PORT || 3000;
+const fs = require('fs');
+
 
 const app = express();
 app.use(cors());
