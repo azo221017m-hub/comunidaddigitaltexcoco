@@ -217,7 +217,12 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
   <label for="imagenes" class="btn-upload">📸 Seleccionar la mi logo</label>
 
   <!-- Input real oculto -->
-<input type="file" id="imagenes" name="imagen" accept="image/*" onchange="validarMaximoImagenes(this)">
+<input 
+  type="file" 
+  id="imagenes" 
+  name="imagen" 
+  accept="image/*"
+  onchange="validarMaximoImagenes(this)">
 
 </div>
 
@@ -242,25 +247,22 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 const form = document.getElementById("regForm");
 
 form.addEventListener("submit", async function(e) {
-  e.preventDefault(); // Evitar envío por defecto
+  e.preventDefault();
 
   const contacto = document.getElementById("contacto");
   const telefono = document.getElementById("telefono");
   const descripcion = document.getElementById("descripcion");
-  const imagenes = document.getElementById("imagenes"); // input file
+  const imagenes = document.getElementById("imagenes");
 
-  // --- 2. Enviar al backend para guardar en DB ---
   try {
+    // 1️⃣ Enviar datos al backend
     const formData = new FormData();
-    formData.append('nobredenegocio', contacto.value); // aquí puedes adaptar el nombre del negocio si lo tienes
+    formData.append('nobredenegocio', contacto.value);
     formData.append('propietario', contacto.value);
     formData.append('telnegocio', telefono.value);
     formData.append('descripcionnegocio', descripcion.value);
-
-    // Adjuntar imagenes (solo 1 por simplicidad, o guardar la ruta)
     if(imagenes.files.length > 0){
-      formData.append('imagen', imagenes.files[0]); 
-      // para múltiples imágenes habría que guardarlas y enviar sus rutas
+      formData.append('imagen', imagenes.files[0]);
     }
 
     const res = await fetch('https://comunidaddigital.onrender.com/api/negocios', {
@@ -270,14 +272,15 @@ form.addEventListener("submit", async function(e) {
 
     const msg = await res.text();
     console.log(msg);
+    alert(msg); // mostrar mensaje al usuario
+
   } catch(err) {
     console.error('Error al guardar en DB:', err);
+    alert('❌ Error al guardar negocio');
   }
 
-  // Limpiar formulario
   form.reset();
 });
-
 
 
 </script>
