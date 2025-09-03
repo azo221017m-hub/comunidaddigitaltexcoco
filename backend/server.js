@@ -36,6 +36,8 @@ const upload = multer({ storage });
 
 // Ruta para recibir el archivo
 app.post("/api/upload", upload.single("imagen"), (req, res) => {
+  console.log(req.body); // contacto, teléfono, descripción
+  console.log(req.files); // archivos subidos
   if (!req.file) return res.status(400).send("No se envió archivo");
   
   res.send(`Archivo guardado como: ${req.file.filename}`);
