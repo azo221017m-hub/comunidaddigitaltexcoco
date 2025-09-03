@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad DT Ver 3.01</div>
+      <div class="brand">Comunidad DT Ver 4.01</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -286,7 +286,7 @@ let waAbierto = false;
       // para múltiples imágenes habría que guardarlas y enviar sus rutas
     }
 
-    const res = await fetch('http://localhost:3000/api/negocios', {
+    const res = await fetch('https://comunidaddigital.onrender.com/api/negocios', {
       method: 'POST',
       body: formData
     });
