@@ -32,7 +32,10 @@ const storage = multer.diskStorage({
   }
 });
 
+
+app.get('/ping', (req, res) => res.send('pong'));
 const upload = multer({ storage: storage });
+
 
 
 // Ruta para guardar negocio
