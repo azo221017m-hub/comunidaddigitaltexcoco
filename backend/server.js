@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const db = require('./db');
 const path = require('path');
 const router = express.Router();
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(cors());
@@ -54,4 +55,6 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 
 
 
-app.listen(3306, () => console.log('🚀 Servidor corriendo en :3306'));
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor Express corriendo en puerto ${PORT}`);
+});
