@@ -35,7 +35,12 @@ const upload = multer({ storage: storage });
 
 // Ruta para registrar un negocio
 app.post('/api/negocios', upload.single('imagen'), (req, res) => {
-  const { nobredenegocio, propietario, telnegocio, descripcionnegocio } = req.body;
+  
+ console.log('req.body:', req.body);
+  console.log('req.file:', req.file);
+
+
+const { nobredenegocio, propietario, telnegocio, descripcionnegocio } = req.body;
   const imagen = req.file ? req.file.filename : null; // Nombre del archivo
 
   const sql = `
