@@ -254,24 +254,6 @@ form.addEventListener("submit", async function(e) {
   const descripcion = document.getElementById("descripcion");
   const imagenes = document.getElementById("imagenes"); // input file
 
-let waAbierto = false;
-
-
-  if (!waAbierto) {
-    const mensaje = `Nuevo registro de negocio:%0A` +
-                    `Nombre de contacto: ${contacto.value}%0A` +
-                    `Teléfono: ${telefono.value}%0A` +
-                    `Descripción: ${descripcion.value}`;
-
-    const numeroWhats = "5215527618631"; 
-    const url = `https://wa.me/${numeroWhats}?text=${mensaje}`;
-
-    window.open(url, "_blank");
-    waAbierto = true; // ahora ya no se volverá a abrir
-  }
-
-
-
   // --- 2. Enviar al backend para guardar en DB ---
   try {
     const formData = new FormData();
