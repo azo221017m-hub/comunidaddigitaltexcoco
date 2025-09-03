@@ -286,10 +286,15 @@ let waAbierto = false;
       // para múltiples imágenes habría que guardarlas y enviar sus rutas
     }
 
-    const res = await fetch('https://comunidaddigital.onrender.com/api/negocios', {
-      method: 'POST',
-      body: formData
-    });
+ const API_URL = window.location.hostname.includes("localhost")
+  ? "http://localhost:3000"
+  : "https://comunidaddigital.onrender.com/";
+
+const res = await fetch(`${API_URL}/api/negocios`, {
+  method: 'POST',
+  body: formData
+});
+
 
     const msg = await res.text();
     console.log(msg);
