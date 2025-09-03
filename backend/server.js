@@ -53,4 +53,4 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
   });
 });
 
-app.listen(3000, () => console.log('🚀 Servidor corriendo en http://localhost:3000'));
+app.listen(3306, () => console.log('🚀 Servidor corriendo en http://localhost:3306'));
