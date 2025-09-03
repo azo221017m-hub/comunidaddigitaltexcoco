@@ -57,7 +57,6 @@ router.post("/negocios", upload.single("imagen"), (req, res) => {
 
 module.exports = router;
 
-const negociosRoutes = require("./routes/negocios");
-app.use("/api", negociosRoutes);
+
 
 app.listen(3306, () => console.log('🚀 Servidor corriendo en :3306'));
