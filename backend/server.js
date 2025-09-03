@@ -21,20 +21,26 @@ app.get('/', (req, res) => {
 });
 
 
-// Configuración de multer para guardar imágenes
+// Crear carpeta de uploads si no existe
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+
+// Configuración de multer
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads/'); // Carpeta donde se guardarán
-  },
-  filename: function (req, file, cb) {
-    // Para evitar sobreescribir archivos con mismo nombre
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
+});
+const upload = multer({ storage });
+
+// Ruta para recibir el archivo
+app.post("/api/upload", upload.single("imagen"), (req, res) => {
+  if (!req.file) return res.status(400).send("No se envió archivo");
+  
+  res.send(`Archivo guardado como: ${req.file.filename}`);
 });
 
-
-app.get('/ping', (req, res) => res.send('pong'));
-const upload = multer({ storage: storage });
+// Servir archivos estáticos para acceder a ellos
+app.use("/uploads", express.static(uploadDir));
 
 
 

@@ -249,6 +249,10 @@ const form = document.getElementById("regForm");
 form.addEventListener("submit", async function(e) {
   e.preventDefault(); // Evitar envío por defecto
 
+const fileInput = document.getElementById("imagen");
+  const formData = new FormData();
+formData.append("imagen", fileInput.files[0]); // adjuntar archivo
+
   const contacto = document.getElementById("contacto");
   const telefono = document.getElementById("telefono");
   const descripcion = document.getElementById("descripcion");
@@ -292,6 +296,21 @@ const res = await fetch(`${API_URL}/api/negocios`, {
   method: 'POST',
   body: formData
 });
+
+
+
+ try {
+    const res = await fetch("h${API_URL}/api/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const msg = await res.text();
+    alert(msg);
+  } catch (err) {
+    console.error(err);
+    alert("Error al subir el archivo");
+  }
 
 
     const msg = await res.text();
