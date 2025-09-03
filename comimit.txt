@@ -1,0 +1,4 @@
+git add .
+git commit -m "Subida forzada desde local"
+git push origin main --force
+
