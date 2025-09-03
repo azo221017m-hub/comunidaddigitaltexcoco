@@ -247,7 +247,6 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 const form = document.getElementById("regForm");
 
 const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
 
 form.addEventListener("submit", async function(e) {
@@ -290,6 +289,8 @@ let waAbierto = false;
 
     // Adjuntar imagenes (solo 1 por simplicidad, o guardar la ruta)
     if(imagenes.files.length > 0){
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+
       formData.append('imagen', imagenes.files[0]); 
       // para múltiples imágenes habría que guardarlas y enviar sus rutas
     }
