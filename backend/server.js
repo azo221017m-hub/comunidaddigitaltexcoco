@@ -57,15 +57,24 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 
 
 // Ruta para obtener visitas
+// Ruta para obtener y aumentar visitas
 app.get('/api/visitas', (req, res) => {
-  const sql = 'SELECT visitas FROM contador WHERE id = 1';
-  db.query(sql, (err, results) => {
+  // 1️⃣ Aumentar en 1 el contador
+  const updateSql = 'UPDATE contador SET visitas = visitas + 1 WHERE id = 1';
+  db.query(updateSql, (err) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (results.length > 0) {
-      res.json({ visitas: results[0].visitas+1000 });
-    } else {
-      res.json({ visitas: 0 });
-    }
+
+    // 2️⃣ Obtener el valor actualizado
+    const selectSql = 'SELECT visitas FROM contador WHERE id = 1';
+    db.query(selectSql, (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      if (results.length > 0) {
+        res.json({ visitas: results[0].visitas });
+      } else {
+        res.json({ visitas: 0 });
+      }
+    });
   });
 });
 
