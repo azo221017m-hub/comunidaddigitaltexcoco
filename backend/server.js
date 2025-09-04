@@ -57,17 +57,25 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 
 
 // Visitas
-app.get("/api/visitas", async (req, res) => {
-  try {
-    await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
-    const [rows] = await pool.query("SELECT visitas FROM contador WHERE id = 1");
-    res.json({ visitas: rows[0].visitas }); // 👈 aquí falla si rows[0] es undefined
-  } catch (err) {
-    console.error("Error al actualizar visitas:", err);
-    res.status(500).json({ error: "Error en el servidor" });
-  }
-});
+const express = require('express');
+const app = express();
+const db = require('./db'); // tu db.js
 
+// Servir archivos estáticos
+app.use(express.static('public')); // tu carpeta con index.html
+
+// Ruta para obtener visitas
+app.get('/api/visitas', (req, res) => {
+  const sql = 'SELECT visitas FROM contador WHERE id = 1';
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length > 0) {
+      res.json({ visitas: results[0].visitas });
+    } else {
+      res.json({ visitas: 0 });
+    }
+  });
+});
 
 
 

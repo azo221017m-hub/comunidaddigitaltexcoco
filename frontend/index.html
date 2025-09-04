@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad DT Ver 4.90.200</div>
+      <div class="brand">Comunidad DT Ver 4.90.400</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -48,19 +48,18 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 <div style="display:flex;gap:14px;align-items:center;">
 <div id="contador">Cargando visitas CDT...</div>
 
-<script>
-  async function cargarVisitas() {
-    try {
-      const res = await fetch("https://comunidaddigital.onrender.com/api/visitas"); // 👈 misma ruta
-      const data = await res.json(); // 👈 aquí espera JSON
-      document.getElementById("contador").textContent = data.visitas + " visitas";
-    } catch (error) {
-      console.error("Error cargando visitas:", error);
-    }
-  }
-
-  cargarVisitas();
-</script>
+ <script>
+    // Traer el contador desde la API
+    fetch('/api/visitas')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('contador').textContent = `El sitio ha sido visitado ${data.visitas} veces.`;
+      })
+      .catch(err => {
+        document.getElementById('contador').textContent = 'No se pudo cargar el contador.';
+        console.error(err);
+      });
+  </script>
              
       </div>
      </header>
