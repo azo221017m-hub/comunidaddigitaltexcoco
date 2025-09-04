@@ -62,7 +62,7 @@ app.get('/api/visitas', (req, res) => {
   db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     if (results.length > 0) {
-      res.json({ visitaSS: results[0].visitas+100 });
+      res.json({ visitaSS: results[0].visitas });
     } else {
       res.json({ VIsitas: 0 });
     }
