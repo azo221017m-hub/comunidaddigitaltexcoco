@@ -56,14 +56,6 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 });
 
 
-// Visitas
-const express = require('express');
-const app = express();
-const db = require('./db'); // tu db.js
-
-// Servir archivos estáticos
-app.use(express.static('public')); // tu carpeta con index.html
-
 // Ruta para obtener visitas
 app.get('/api/visitas', (req, res) => {
   const sql = 'SELECT visitas FROM contador WHERE id = 1';
