@@ -59,9 +59,16 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 // Visitas
 app.get("/api/visitas", async (req, res) => {
   try {
-    await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
+    // Intentar actualizar
+    const [result] = await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
+    
+    // Si no se actualizó ningún registro, insertarlo
+    if (result.affectedRows === 0) {
+      await pool.query("INSERT INTO contador (id, visitas) VALUES (1, 1)");
+    }
+
     const [rows] = await pool.query("SELECT visitas FROM contador WHERE id = 1");
-    res.json({ visitas: rows[0].visitas }); // 👈 JSON real
+    res.json({ visitas: rows[0].visitas });
   } catch (err) {
     console.error("Error al actualizar visitas:", err);
     res.status(500).json({ error: "Error en el servidor" });
@@ -69,4 +76,5 @@ app.get("/api/visitas", async (req, res) => {
 });
 
 
+//LLAMA APP para concola
 app.listen(3000, () => console.log('🚀 Servidor corriendo en http://localhost:3000'));
