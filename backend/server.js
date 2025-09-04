@@ -37,12 +37,12 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
   console.log('Campos recibidos:', req.body);
   console.log('Archivo recibido:', req.file);
 
-  const { nobredenegocio, propietario, telnegocio, descripcionnegocio } = req.body;
+  const { nombredenegocio, propietario, telnegocio, descripcionnegocio } = req.body;
   const imagen = req.file ? req.file.filename : null;
 
   const sql = `
     INSERT INTO negociostbl
-    (nobredenegocio, propietario, telnegocio, descripcionnegocio, imagen)
+    (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen)
     VALUES (?, ?, ?, ?, ?)
   `;
 
