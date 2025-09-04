@@ -53,7 +53,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
     fetch('/api/visitas')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('contador').textContent = `El sitio ha sido visitado ${data.visitas}+1000 veces.`;
+        document.getElementById('contador').textContent = `El sitio ha sido visitado ${data.visitas} veces.`;
       })
       .catch(err => {
         document.getElementById('contador').textContent = 'No se pudo cargar el contador.';
