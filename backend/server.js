@@ -56,12 +56,14 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 });
 
 
-
-app.get("/visita", async (req, res) => {
+// Visitas
+app.get("/api/visita", async (req, res) => {
   try {
     await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
     const [rows] = await pool.query("SELECT visitas FROM contador WHERE id = 1");
     res.json({ visitas: rows[0].visitas });
+     console.log('📥 Llega POST /api/visitas');
+  console.log('VIsitas : rows[0].visitas ', req.file);
   } catch (err) {
     console.error("Error al actualizar visitas:", err);
     res.status(500).json({ error: "Error en el servidor" });
@@ -69,23 +71,13 @@ app.get("/visita", async (req, res) => {
 });
 
 // Página principal
-app.get("/", async (req, res) => {
+app.get("/visitas", async (req, res) => {
   try {
     await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
     const [rows] = await pool.query("SELECT visitas FROM contador WHERE id = 1");
-
-    res.send(`
-      <html>
-        <head><title>Contador de Visitas</title></head>
-        <body style="font-family: Arial; text-align:center; margin-top:50px;">
-          <h1>Bienvenido 🚀</h1>
-          <p>Este sitio ha recibido:</p>
-          <h2>${rows[0].visitas} visitas</h2>
-        </body>
-      </html>
-    `);
+    res.json({ visitas: rows[0].visitas });
   } catch (err) {
-    res.status(500).send("Error cargando la página.");
+    res.status(500).json({ error: "Error en el servidor" });
   }
 });
 
