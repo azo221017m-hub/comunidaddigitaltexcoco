@@ -45,20 +45,23 @@
 conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div>
     </div>
 
-    <script>
-    async function cargarVisitas() {
-      const res = await fetch("https://comunidaddigital.onrender.com/visitas");
-      const data = await res.json();
+<div style="display:flex;gap:14px;align-items:center;">
+<div id="contador">Cargando visitas CDT...</div>
 
-       <div style="display:flex;gap:14px;align-items:center;">
-             <div id="contadorVisitas">
-              document.getElementById("contador").textContent = data.visitas + " visitas";
-              </div>
+<script>
+  async function cargarVisitas() {
+    try {
+      const res = await fetch("https://comunidaddigital.onrender.com/visitas"); // 👈 misma ruta
+      const data = await res.json(); // 👈 aquí espera JSON
+      document.getElementById("contador").textContent = data.visitas + " visitas";
+    } catch (error) {
+      console.error("Error cargando visitas:", error);
+    }
+  }
 
-
-     cargarVisitas();
-    </script>
-
+  cargarVisitas();
+</script>
+             
       </div>
      </header>
 
@@ -295,9 +298,6 @@ form.addEventListener("submit", async function(e) {
 </script>
 
 
-
-
-
   </section>
 
     <!-- Footer -->
@@ -307,19 +307,16 @@ form.addEventListener("submit", async function(e) {
     </footer>
   </main>
 
+
+
 <script>
-
-
-
 // Obtener contador del localStorage (persistencia local)
+
   let visitas = localStorage.getItem('contadorVisitas') || 0;
   visitas = parseInt(visitas) + 1;
   localStorage.setItem('contadorVisitas', visitas);
 
-  // Mostrar en el footer
-  document.getElementById('contadorVisitas').innerText = `Visitas: ${visitas}`;
-
-
+ 
 /* ---------- Card slides per card (auto-advance) ---------- */
 document.querySelectorAll('.business-card').forEach(card=>{
   const slides = card.querySelectorAll('.slide');
@@ -380,9 +377,6 @@ document.addEventListener('click', (e) => {
     avisoBubble.style.display = 'none';
   }
 });
-
-
-
 </script>
 </body>
 </html>
