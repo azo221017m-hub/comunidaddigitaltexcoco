@@ -71,7 +71,7 @@ app.get("/api/visita", async (req, res) => {
 });
 
 // Página principal
-app.get("/visitas", async (req, res) => {
+app.get("/api/visitas", async (req, res) => {
   try {
     await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
     const [rows] = await pool.query("SELECT visitas FROM contador WHERE id = 1");
