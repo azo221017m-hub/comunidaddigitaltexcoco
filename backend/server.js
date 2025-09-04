@@ -56,7 +56,7 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 });
 
 
-// Ruta para obtener visitas
+
 // Ruta para obtener y aumentar visitas
 app.get('/api/visitas', (req, res) => {
   // 1️⃣ Aumentar en 1 el contador
