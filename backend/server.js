@@ -55,4 +55,42 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
   });
 });
 
+
+
+app.get("/visita", async (req, res) => {
+  try {
+    await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
+    const [rows] = await pool.query("SELECT visitas FROM contador WHERE id = 1");
+    res.json({ visitas: rows[0].visitas });
+  } catch (err) {
+    console.error("Error al actualizar visitas:", err);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
+
+// Página principal
+app.get("/", async (req, res) => {
+  try {
+    await pool.query("UPDATE contador SET visitas = visitas + 1 WHERE id = 1");
+    const [rows] = await pool.query("SELECT visitas FROM contador WHERE id = 1");
+
+    res.send(`
+      <html>
+        <head><title>Contador de Visitas</title></head>
+        <body style="font-family: Arial; text-align:center; margin-top:50px;">
+          <h1>Bienvenido 🚀</h1>
+          <p>Este sitio ha recibido:</p>
+          <h2>${rows[0].visitas} visitas</h2>
+        </body>
+      </html>
+    `);
+  } catch (err) {
+    res.status(500).send("Error cargando la página.");
+  }
+});
+
+
+
+
+
 app.listen(3000, () => console.log('🚀 Servidor corriendo en http://localhost:3000'));
