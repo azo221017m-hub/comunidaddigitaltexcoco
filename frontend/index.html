@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad DT Ver 4.90.770</div>
+      <div class="brand">Comunidad DT Ver 4.90.780</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -212,8 +212,8 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
   </div>
 
   <div class="form-group">
-    <label for="negocio">Nombre de negocio</label>
-    <input type="text" id="negocio" placeholder="Ej. Abarrates Texcoco" required>
+    <label for="nomnegocio">Nombre de negocio</label>
+    <input type="text" id="nomnegocio" placeholder="Ej. Abarrates Texcoco" required>
   </div>
 
   <div class="form-group">
@@ -266,7 +266,7 @@ form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
   const contacto = document.getElementById("contacto");
-  const negocio = document.getElementById("negocio");
+  const nomnegocio = document.getElementById("nomnegocio");
   const telefono = document.getElementById("telefono");
   const descripcion = document.getElementById("descripcion");
   const imagenes = document.getElementById("imagenes");
@@ -274,7 +274,7 @@ form.addEventListener("submit", async function(e) {
   try {
     // 1️⃣ Enviar datos al backend
     const formData = new FormData();
-    formData.append('nombredenegocio', negocio.value);
+    formData.append('nombredenegocio', nomnegocio.value);
     formData.append('propietario', contacto.value);
     formData.append('telnegocio', telefono.value);
     formData.append('descripcionnegocio', descripcion.value);

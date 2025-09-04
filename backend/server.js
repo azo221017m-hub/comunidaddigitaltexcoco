@@ -46,7 +46,7 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
     VALUES (?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [nobredenegocio, propietario, telnegocio, descripcionnegocio, imagen], (err, result) => {
+  db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen], (err, result) => {
     if (err) {
       console.error('Error al insertar en DB:', err);
       return res.status(500).send('❌ Error al guardar en DB');
