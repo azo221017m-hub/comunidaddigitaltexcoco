@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad DT Ver 4.91</div>
+      <div class="brand">Comunidad DT Ver 4.95</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -51,7 +51,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 <script>
   async function cargarVisitas() {
     try {
-      const res = await fetch("https://comunidaddigital.onrender.com/visitas"); // 👈 misma ruta
+      const res = await fetch("https://comunidaddigital.onrender.com/api/visitas"); // 👈 misma ruta
       const data = await res.json(); // 👈 aquí espera JSON
       document.getElementById("contador").textContent = data.visitas + " visitas";
     } catch (error) {
