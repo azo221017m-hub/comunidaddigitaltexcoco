@@ -15,7 +15,7 @@ app.use(express.static('../frontend'));
 
 // Ruta por defecto -> index.html
 app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: '../frontend' });
+  res.sendFile('mock.html', { root: '../frontend' });
 });
 
 
