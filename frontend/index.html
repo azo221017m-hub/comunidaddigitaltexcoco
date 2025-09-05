@@ -1,324 +1,201 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Comunidad Digital Texcoco</title>
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link rel="stylesheet" href="css/style.css">
-<script src="js/script.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comunidad Digital Texcoco - Lanzamiento</title>
+<style>
+  /* Reset y tipografía */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body, html { width:100%; height:100%; font-family: 'Segoe UI', sans-serif; overflow:hidden; }
 
+  /* Fondo animado tipo gradiente con movimiento sutil */
+  body {
+    background: linear-gradient(120deg, #581c87, #9333ea, #c084fc);
+    background-size: 300% 300%;
+    animation: gradientShift 15s ease infinite;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    color:#fff;
+  }
+
+  @keyframes gradientShift {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+
+  /* Logo central animado */
+  .logo-container {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    animation: popIn 1s ease forwards;
+  }
+
+  .logo-container img {
+    width:200px;
+    max-width:80%;
+    height:auto;
+    border-radius:12px;
+    box-shadow:0 0 30px rgba(0,0,0,0.4);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes popIn {
+    0% {transform: scale(0);}
+    100% {transform: scale(1);}
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0);}
+    50% { transform: translateY(-10px);}
+  }
+
+  /* Texto animado */
+  h1 {
+    font-size:2.5rem;
+    margin-top:20px;
+    animation: fadeIn 2s ease forwards;
+    opacity:0;
+  }
+
+  p {
+    font-size:1.2rem;
+    margin-top:10px;
+    animation: fadeIn 2.5s ease forwards;
+    opacity:0;
+  }
+
+  @keyframes fadeIn {
+    to { opacity:1; }
+  }
+
+  /* Botón de registro */
+  .btn-register {
+    display:inline-block;
+    margin-top:25px;
+    padding:15px 30px;
+    font-size:1.2rem;
+    color:#fff;
+    background-color:#34d399;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    text-decoration:none;
+    transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 3s ease forwards;
+    opacity:0;
+  }
+
+  .btn-register:hover {
+    background-color:#10b981;
+    transform: translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.4);
+  }
+
+  /* Fondo de partículas tipo red neuronal */
+  canvas {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+  }
+
+</style>
 </head>
 <body>
 
-<div id="cursor" class="cursor-circle"></div>
+<canvas id="neuralNetwork"></canvas>
 
-<script>
-  const cursor = document.getElementById('cursor');
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-  });
-</script>
-
-
-  <!-- Animated background layers -->
-  <div class="bg-animated" aria-hidden="true">
-    <div class="grad"></div>
-    <div class="stripes"></div>
-    <div class="orb o1"></div>
-    <div class="orb o2"></div>
-    <div class="orb o3"></div>
-  </div>
-
-  <!-- Header -->
-  <header class="navbar" role="banner">
-    <div class="logo" aria-label="logo">
-      <!-- Cambia logocdt.png por tu imagen -->
-      <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad Digital Texcoco Ver 5.D.100</div>
-    </div>
-
-    <div class="center-section" aria-hidden="false">
-      <div class="title">El pulso digital de Texcoco.</div>
-      <div class="desc">Somos una solución digital en Texcoco donde emprendedores, creativos y ciudadanos<BR>
-conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div>
-    </div>
-
-<div style="display:flex;gap:14px;align-items:center;">
-<div id="contador">Cargando visitas CDT...</div>
-
- <script>
-    // Traer el contador desde la API
-    fetch('/api/visitas')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('contador').textContent = `El sitio ha sido visitado ${data.visitas} veces.`;
-      })
-      .catch(err => {
-        document.getElementById('contador').textContent = 'No se pudo cargar el contador.';
-        console.error(err);
-      });
-  </script>
-             
-      </div>
-     </header>
-
-
-<main class="container">
-  <!-- Fichas de negocio -->
-
-<section class="business-grid">
-
-  <div class="carousel-row" id="bizCarousel">
-    <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/logocdt.png" alt=""></div>
-        <div class="slide"><img src="img/logocdt2.png" alt=""></div>
-        <div class="slide"><img src="img/logocdt3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>COmunidad DIgital TExcoco</h3>
-        <p>Conecta con más clientes.</p>
-        <div class="loc">✍️ Registro GRATIS</div>
-      </div>
-    </div>
-
-
-
-    <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/dulcesabor.png" alt=""></div>
-        <div class="slide"><img src="img/dulcesabor2.png" alt=""></div>
-        <div class="slide"><img src="img/dulcesabor3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>Dulce Sabor del Recuerdo</h3>
-        <p> Pasteles, gelatinas, y recuerdos personalizados.</p>
-        <div class="loc">📞 5615720256</div>
-      </div>
-    </div>
-
-
-     <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/chuzamar.png" alt=""></div>
-        <div class="slide"><img src="img/chuzamar2.png" alt=""></div>
-        <div class="slide"><img src="img/chuzamar3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>Churrería ZAMAR</h3>
-        <p> Elaboramos deliciosos y crujientes churros en Texcoco.</p>
-        <div class="loc">📞 5535569723</div>
-      </div>
-    </div>
-
-
-
-    <!-- Puedes clonar más business-card según sea necesario -->
-  </div>
-</section>
-
-</main>
-
-  <!-- Beneficios -->
-  <section class="benefits" id="beneficios">
-    <div class="benefit">
-      <h3>📢 Más visibilidad</h3>
-      <p>Muestra lo bonito de tu negocio en nuestra comunidad digital y llega a más clientes.</p>
-    </div>
-    <div class="benefit">
-      <h3>🤝 Conexión local</h3>
-      <p>Haz alianzas con otros emprendedores de Texcoco.<br>
-         (Mantenimiento, Publicidad, Impresores, Transporte, etc.)</p>
-    </div>
-    <div class="benefit">
-      <h3>💻 Digitalización Fácil</h3>
-      <p>Sin costo, sin complicaciones, con solo un registro.</p>
-    </div>
-    <div class="benefit">
-      <h3>🚀 Crecimiento real</h3>
-      <p>Más clientes, más oportunidades, más futuro.</p>
-    </div>
-  </section>
-
-<section class="registro-container">
-    <h2>Registra tu Negocio en nuestra Comunidad Digital</h2>
-
-
-<form id="regForm">
-  <div class="form-group">
-    <label for="contacto">Nombre de contacto</label>
-    <input type="text" id="contacto" placeholder="Ej. Juan Pérez" required>
-  </div>
-
-  <div class="form-group">
-    <label for="nomnegocio">Nombre de negocio</label>
-    <input type="text" id="nomnegocio" placeholder="Ej. Abarrotes Texcoco" required>
-  </div>
-
-  <div class="form-group">
-    <label for="telefono">Teléfono</label>
-    <input type="tel" id="telefono" placeholder="Ej. 595-123-4567" required>
-  </div>
-
-  <div class="form-group">
-    <label for="descripcion">Descripción del negocio</label>
-    <textarea id="descripcion" placeholder="Breve descripción..." required></textarea>
-  </div>
-
-<div class="form-group">
-  
-  <!-- Input real oculto -->
-<input 
-  type="file" 
-  id="imagenes" 
-  name="imagen" 
-  accept="image/*"
-  onchange="validarMaximoImagenes(this)">
-
+<div class="logo-container">
+  <img src="img/logocdt.png" alt="Comunidad Digital Texcoco">
+  <h1>Bienvenido a Comunidad Digital Texcoco</h1>
+  <p>Conecta tu negocio con clientes y otros emprendedores de Texcoco.</p>
+  <a href="pcdtinicio.html" class="btn-register">Registro Gratis</a>
 </div>
 
-
-  <button type="submit" class="btn-submit">Registrar mi negocio</button>
-
-<div class="aviso-container">
-  <span id="avisoToggle" class="aviso-link">AVISO DE PRIVACIDAD</span>
-  <div id="avisoBubble" class="aviso-bubble">
-    <h4>Aviso de Privacidad</h4>
-    <p>
-      Este sitio web respeta tu privacidad. Los datos recolectados serán usados únicamente
-      para fines de registro y contacto de negocios, conforme a la Ley de Protección de Datos.
-      No compartimos información con terceros sin tu consentimiento.
-    </p>
-  </div>
-</div>
-
-</form>
-
 <script>
-const form = document.getElementById("regForm");
+// Fondo tipo red neuronal
+const canvas = document.getElementById("neuralNetwork");
+const ctx = canvas.getContext("2d");
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
 
-form.addEventListener("submit", async function(e) {
-  e.preventDefault();
+window.addEventListener('resize', () => {
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+});
 
-  const contacto = document.getElementById("contacto");
-  const nomnegocio = document.getElementById("nomnegocio");
-  const telefono = document.getElementById("telefono");
-  const descripcion = document.getElementById("descripcion");
-  const imagenes = document.getElementById("imagenes");
+const mouse = {x:null, y:null, radius:150};
+window.addEventListener("mousemove", e => { mouse.x=e.clientX; mouse.y=e.clientY; });
+window.addEventListener("mouseleave", () => { mouse.x=null; mouse.y=null; });
 
-  try {
-    // 1️⃣ Enviar datos al backend
-    const formData = new FormData();
-    formData.append('nombredenegocio', nomnegocio.value);
-    formData.append('propietario', contacto.value);
-    formData.append('telnegocio', telefono.value);
-    formData.append('descripcionnegocio', descripcion.value);
-    if(imagenes.files.length > 0){
-      formData.append('imagen', imagenes.files[0]);
+class Node {
+  constructor(){
+    this.x = Math.random()*width;
+    this.y = Math.random()*height;
+    this.vx = (Math.random()-0.5)*0.4;
+    this.vy = (Math.random()-0.5)*0.4;
+    this.radius = 2 + Math.random()*2;
+  }
+  move(){
+    this.x += this.vx; this.y += this.vy;
+    if(this.x<0 || this.x>width) this.vx*=-1;
+    if(this.y<0 || this.y>height) this.vy*=-1;
+
+    if(mouse.x && mouse.y){
+      const dx = this.x - mouse.x;
+      const dy = this.y - mouse.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist<mouse.radius){
+        const force=(mouse.radius-dist)/mouse.radius;
+        const angle = Math.atan2(dy, dx);
+        this.vx -= Math.cos(angle)*force*0.05;
+        this.vy -= Math.sin(angle)*force*0.05;
+      }
     }
-
-    const res = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios', {
-      method: 'POST',
-      body: formData
-    });
-
-    const msg = await res.text();
-    console.log(msg);
-    alert(msg); // mostrar mensaje al usuario
-
-  } catch(err) {
-    console.error('Error al guardar en DB:', err);
-    alert('❌ Error al guardar negocio');
   }
-
-  form.reset();
-});
-
-
-</script>
-
-
-  </section>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div>© 2025 Comunidad Digital Texcoco</div>
-
-    </footer>
-  </main>
-
-
-
-<script>
-// Obtener contador del localStorage (persistencia local)
-
-  let visitas = localStorage.getItem('contadorVisitas') || 0;
-  visitas = parseInt(visitas) + 1;
-  localStorage.setItem('contadorVisitas', visitas);
-
- 
-/* ---------- Card slides per card (auto-advance) ---------- */
-document.querySelectorAll('.business-card').forEach(card=>{
-  const slides = card.querySelectorAll('.slide');
-  let idx = 0, t;
-  function show(i){
-    slides.forEach((s,si)=> s.classList.toggle('active', si===i));
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.6)";
+    ctx.fill();
   }
-  function start(){
-    t = setInterval(()=>{
-      idx = (idx+1) % slides.length;
-      show(idx);
-    }, 3000 + Math.random()*1200);
-  }
-  function stop(){
-    clearInterval(t);
-  }
-  // start auto-rotate
-  start();
-
-  // Stop rotating when hovering the card (so flip shows back)
-  card.addEventListener('mouseenter', ()=> stop());
-  card.addEventListener('mouseleave', ()=> start());
-});
-
-/* ---------- Mini slide in Comunidad (3 images) ---------- */
-(function(){
-  const container = document.getElementById('miniSlide');
-  if(!container) return;
-  const imgs = Array.from(container.querySelectorAll('img'));
-  let i=0;
-  function show(j){ imgs.forEach((img,idx)=> img.style.display = idx===j ? 'block' : 'none'); }
-  show(0);
-  setInterval(()=>{ i = (i+1) % imgs.length; show(i); }, 3500);
-})();
-
-
-
-/* ---------- Accessibility: reduce motion respect ---------- */
-if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-  document.querySelectorAll('.bg-animated .orb').forEach(o=> o.style.animation = 'none');
-  document.querySelectorAll('.slides .slide').forEach(s=> s.style.transition = 'none');
 }
 
+const nodes=[]; const NUM_NODES=80; const MAX_DIST=150;
+for(let i=0;i<NUM_NODES;i++) nodes.push(new Node());
 
-
-// JavaScript
-const avisoLink = document.getElementById('avisoToggle');
-const avisoBubble = document.getElementById('avisoBubble');
-
-avisoLink.addEventListener('click', () => {
-  // Alterna la visibilidad de la burbuja
-  avisoBubble.style.display = avisoBubble.style.display === 'block' ? 'none' : 'block';
-});
-
-// Opcional: cerrar la burbuja al hacer click fuera
-document.addEventListener('click', (e) => {
-  if (!avisoLink.contains(e.target) && !avisoBubble.contains(e.target)) {
-    avisoBubble.style.display = 'none';
+function animate(){
+  ctx.clearRect(0,0,width,height);
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x;
+      const dy=nodes[i].y-nodes[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<MAX_DIST){
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x,nodes[i].y);
+        ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.strokeStyle=`rgba(255,255,255,${0.1-dist/(MAX_DIST*5)})`;
+        ctx.lineWidth=1;
+        ctx.stroke();
+      }
+    }
   }
-});
+  nodes.forEach(n=>{n.move(); n.draw();});
+  requestAnimationFrame(animate);
+}
+animate();
 </script>
+
 </body>
 </html>
