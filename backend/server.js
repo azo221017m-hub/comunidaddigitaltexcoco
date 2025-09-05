@@ -13,11 +13,11 @@ app.use(bodyParser.json());
 // Servir archivos estáticos (tu carpeta frontend)
 app.use(express.static('../frontend'));
 
-// Ruta por defecto -> index.html
-app.get('/', (req, res) => {
-  res.sendFile('mock.html', { root: '../frontend' });
-});
+import path from 'path';
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/mock.html'));
+});
 
 // Configuración Multer
 const storage = multer.diskStorage({
