@@ -13,8 +13,6 @@ app.use(bodyParser.json());
 // Servir archivos estáticos (tu carpeta frontend)
 app.use(express.static('../frontend'));
 
-import path from 'path';
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/mock.html'));
 });
