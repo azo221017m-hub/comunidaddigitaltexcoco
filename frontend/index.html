@@ -72,9 +72,9 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
   <div class="carousel-row" id="bizCarousel">
     <div class="business-card">
       <div class="slides">
-        <div class="slide active"><img src="/img/logocdt.png" alt=""></div>
-        <div class="slide"><img src="/img/logocdt2.png" alt=""></div>
-        <div class="slide"><img src="/img/logocdt3.png" alt=""></div>
+        <div class="slide active"><img src="img/logocdt.png" alt=""></div>
+        <div class="slide"><img src="img/logocdt2.png" alt=""></div>
+        <div class="slide"><img src="img/logocdt3.png" alt=""></div>
       </div>
       <div class="card-info">
         <h3>COmunidad DIgital TExcoco</h3>
@@ -122,12 +122,12 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 
   <div class="form-group">
     <label for="nomnegocio">Nombre de negocio</label>
-    <input type="text" id="nomnegocio" placeholder="Ej. Abarrates Texcoco" required>
+    <input type="text" id="nomnegocio" placeholder="Ej. Abarrotes Texcoco" required>
   </div>
 
   <div class="form-group">
     <label for="telefono">Teléfono</label>
-    <input type="tel" id="telefono" placeholder="Ej. 555-123-4567" required>
+    <input type="tel" id="telefono" placeholder="Ej. 595-123-4567" required>
   </div>
 
   <div class="form-group">
@@ -187,7 +187,7 @@ form.addEventListener("submit", async function(e) {
       formData.append('imagen', imagenes.files[0]);
     }
 
-    const res = await fetch('https://comunidaddigital.onrender.com/api/negocios', {
+    const res = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios', {
       method: 'POST',
       body: formData
     });
