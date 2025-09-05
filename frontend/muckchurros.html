@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup Churros Animado</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body, html { width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; background: #ffefd5; }
+  canvas { display: block; position: absolute; top: 0; left: 0; }
+  .logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #d2691e;
+    text-shadow: 2px 2px 6px #fff;
+  }
+</style>
+</head>
+<body>
+<div class="logo">Churrería ZAMAR</div>
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const churros = [];
+const sugar = [];
+
+// Generar churros flotantes
+for(let i=0; i<7; i++){
+  churros.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    speedY: 0.3 + Math.random()*0.5,
+    angle: Math.random()*Math.PI*2,
+    size: 40 + Math.random()*20
+  });
+}
+
+// Generar partículas de azúcar
+for(let i=0; i<200; i++){
+  sugar.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    speedY: 1 + Math.random()*2,
+    size: 1 + Math.random()*2
+  });
+}
+
+function drawChurro(ch) {
+  ctx.save();
+  ctx.translate(ch.x, ch.y);
+  ctx.rotate(Math.sin(ch.angle) * 0.3);
+  ctx.fillStyle = '#d2691e';
+  ctx.fillRect(-ch.size/2, -ch.size/4, ch.size, ch.size/2);
+  ctx.restore();
+}
+
+function drawSugar(s) {
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+  ctx.fill();
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Dibujar azúcar
+  sugar.forEach(s=>{
+    s.y += s.speedY;
+    if(s.y > canvas.height) s.y = 0;
+    drawSugar(s);
+  });
+
+  // Dibujar churros flotantes
+  churros.forEach(ch=>{
+    ch.y += ch.speedY;
+    ch.angle += 0.02;
+    if(ch.y > canvas.height) ch.y = -ch.size;
+    drawChurro(ch);
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Ajuste al cambiar tamaño de ventana
+window.addEventListener('resize', ()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>

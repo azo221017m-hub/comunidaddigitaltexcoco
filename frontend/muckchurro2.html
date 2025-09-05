@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup Animación Churros</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #fefbd8, #ffdba4);
+    font-family: sans-serif;
+    height: 100%;
+  }
+
+  canvas {
+    display: block;
+  }
+
+  .logo {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    font-weight: bold;
+    color: #d2691e;
+    text-shadow: 1px 1px 3px #fff;
+  }
+</style>
+</head>
+<body>
+<div class="logo">Churrería Animada</div>
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Personaje y carrito
+const carrito = {
+  x: canvas.width/2 - 100,
+  y: canvas.height - 200,
+  width: 200,
+  height: 150
+};
+
+const personaje = {
+  x: carrito.x + 50,
+  y: carrito.y + 50,
+  width: 50,
+  height: 80,
+  armAngle: 0,
+  direction: 1
+};
+
+const churros = [];
+
+// Función para dibujar el carrito
+function drawCarrito() {
+  ctx.fillStyle = '#c1440e';
+  ctx.fillRect(carrito.x, carrito.y, carrito.width, carrito.height);
+  // ruedas
+  ctx.fillStyle = '#333';
+  ctx.beginPath();
+  ctx.arc(carrito.x + 30, carrito.y + carrito.height, 15, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(carrito.x + carrito.width - 30, carrito.y + carrito.height, 15, 0, Math.PI*2);
+  ctx.fill();
+}
+
+// Función para dibujar personaje
+function drawPersonaje() {
+  ctx.save();
+  ctx.translate(personaje.x + personaje.width/2, personaje.y + personaje.height/2);
+
+  // cuerpo
+  ctx.fillStyle = '#ffcc99';
+  ctx.fillRect(-15, -30, 30, 60);
+
+  // brazo haciendo churro
+  ctx.save();
+  ctx.translate(0, -10);
+  ctx.rotate(personaje.armAngle);
+  ctx.fillStyle = '#ffcc99';
+  ctx.fillRect(0, 0, 10, -40);
+  ctx.restore();
+
+  // cabeza
+  ctx.beginPath();
+  ctx.arc(0, -40, 15, 0, Math.PI*2);
+  ctx.fillStyle = '#ffcc99';
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// Función para dibujar churros
+function drawChurros() {
+  churros.forEach((c, i) => {
+    ctx.fillStyle = '#d2691e';
+    ctx.fillRect(c.x, c.y, c.width, c.height);
+    c.y -= 1;
+    if(c.y + c.height < 0) churros.splice(i,1);
+  });
+}
+
+// Animación principal
+function animate() {
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+
+  drawCarrito();
+  drawPersonaje();
+  drawChurros();
+
+  // Movimiento del brazo
+  personaje.armAngle += 0.02 * personaje.direction;
+  if(personaje.armAngle > 0.5 || personaje.armAngle < -0.5) personaje.direction *= -1;
+
+  // Cada cierto ciclo, crear churros
+  if(Math.random() < 0.02) {
+    churros.push({
+      x: personaje.x + personaje.width/2 + 5,
+      y: personaje.y + personaje.height/2 - 40,
+      width: 10,
+      height: 30
+    });
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('resize', ()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
