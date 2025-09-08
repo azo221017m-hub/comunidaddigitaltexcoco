@@ -103,7 +103,7 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
   display: flex; justify-content:center; overflow:hidden;
   margin:140px auto 40px; padding:0 20px; max-width:1200px;
 }
-.carousel-row { display:flex; gap:20px; flex-wrap:nowrap; animation: slideLeft 20s linear infinite; }
+.carousel-row { display:flex; gap:20px; flex-wrap:nowrap;margin-top: 30px; animation: slideLeft 20s linear infinite; }
 .business-card {
   flex:0 0 auto; width:280px; background: rgba(255,255,255,0.1);
   border-radius: var(--radius); box-shadow:0 8px 24px rgba(0,0,0,0.2);
@@ -117,9 +117,9 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 .slide img { width:100%; height:100%; object-fit:cover; }
 
 .card-info { padding:12px 16px; text-align:center; }
-.card-info h3 { font-size:1.3rem; margin-bottom:4px; color: #d33471; }
-.card-info p { font-size:0.95rem; margin-bottom:6px; color: #2a4dbe; }
-.card-info .loc { font-size:0.9rem; color: #be2a9e; }
+.card-info h3 { font-size:1.8rem; margin-bottom:4px; color: #d42121; }
+.card-info p { font-size:0.95rem; margin-bottom:6px; color: #c42481; }
+.card-info .loc { font-size:1.3rem; color: #eff1f1; }
 
 @keyframes slideLeft {
   0% { transform: translateX(0); }
