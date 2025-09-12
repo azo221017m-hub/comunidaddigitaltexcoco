@@ -97,40 +97,63 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 }
 
 /* ===================== */
-/* Carrusel / Fichas de negocio */
+/* Carrusel por grupos de 4 fichas */
 /* ===================== */
 .business-grid {
-  display: flex; justify-content:center; overflow:hidden;
-  margin:140px auto 40px; padding:0 20px; max-width:1200px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  margin: 140px auto 40px;
+  padding: 0 20px;
+  max-width: 1200px;
 }
+
 .carousel-row {
   display: flex;
-  gap: 20px;
   flex-wrap: nowrap;
-  margin-top: 30px;
-  animation: slideLeft 20s linear infinite reverse;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+  animation: showGroups 16s infinite;
 }
-.business-card {
-  flex:0 0 auto; width:280px; background: rgba(255,255,255,0.1);
-  border-radius: var(--radius); box-shadow:0 8px 24px rgba(0,0,0,0.2);
-  overflow:hidden; cursor:pointer; transition: transform 0.3s, box-shadow 0.3s;
-}
-.business-card:hover { transform: rotateY(8deg) translateY(-5px); box-shadow:0 12px 32px rgba(0,0,0,0.3); }
 
+/* Tarjeta */
+.business-card {
+  flex: 0 0 22%; /* 4 tarjetas por fila */
+  max-width: 260px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.business-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Imagen deslizable dentro de cada tarjeta */
 .slides { position:relative; height:200px; overflow:hidden; }
 .slide { position:absolute; width:100%; height:100%; opacity:0; transition:opacity 0.7s ease; }
 .slide.active { opacity:1; }
 .slide img { width:100%; height:100%; object-fit:cover; }
 
+/* Texto */
 .card-info { padding:12px 16px; text-align:center; }
-.card-info h3 { font-size:1.8rem; margin-bottom:4px; color: #d42121; }
+.card-info h3 { font-size:1.5rem; margin-bottom:4px; color: #d42121; }
 .card-info p { font-size:0.95rem; margin-bottom:6px; color: #c42481; }
-.card-info .loc { font-size:1.3rem; color: #eff1f1; }
+.card-info .loc { font-size:1.2rem; color: #eff1f1; }
 
-@keyframes slideLeft {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+/* Animación por grupos */
+@keyframes showGroups {
+  0%, 20%   { transform: translateX(0); }
+  25%, 45%  { transform: translateX(-100%); }
+  50%, 70%  { transform: translateX(-200%); }
+  75%, 95%  { transform: translateX(-300%); }
+  100%      { transform: translateX(0); }
 }
+
 
 /* ===================== */
 /* Beneficios Section */
