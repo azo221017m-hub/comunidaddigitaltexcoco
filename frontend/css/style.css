@@ -101,17 +101,11 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 /* ===================== */
 .business-grid {
   display: flex; justify-content:center; overflow:hidden;
-  margin:140px auto 40px; padding:0 20px; max-width:1200px;
+  margin:120px auto 40px; padding:0 20px; max-width:1200px;
 }
-.carousel-row {
-  display: flex;
-  gap: 20px;
-  flex-wrap: nowrap;
-  margin-top: 30px;
-  animation: slideLeft 20s linear infinite reverse;
-}
+.carousel-row { display:flex; gap:20px; flex-wrap:nowrap;margin-top: 30px; animation: slideLeft 20s linear infinite; }
 .business-card {
-  flex:0 0 auto; width:280px; background: rgba(255,255,255,0.1);
+  flex:0 0 auto; width:300px; background: rgba(255,255,255,0.1);
   border-radius: var(--radius); box-shadow:0 8px 24px rgba(0,0,0,0.2);
   overflow:hidden; cursor:pointer; transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -129,7 +123,7 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 
 @keyframes slideLeft {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-20%); }
+  100% { transform: translateX(-50%); }
 }
 
 /* ===================== */
