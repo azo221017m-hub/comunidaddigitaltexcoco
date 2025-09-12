@@ -103,7 +103,13 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
   display: flex; justify-content:center; overflow:hidden;
   margin:140px auto 40px; padding:0 20px; max-width:1200px;
 }
-.carousel-row { display:flex; gap:20px; flex-wrap:nowrap;margin-top: 30px; animation: slideLeft 20s linear infinite; }
+.carousel-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: nowrap;
+  margin-top: 30px;
+  animation: slideLeft 20s linear infinite reverse;
+}
 .business-card {
   flex:0 0 auto; width:280px; background: rgba(255,255,255,0.1);
   border-radius: var(--radius); box-shadow:0 8px 24px rgba(0,0,0,0.2);
