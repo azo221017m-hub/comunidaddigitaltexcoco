@@ -129,7 +129,7 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 
 @keyframes slideLeft {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-20%); }
 }
 
 /* ===================== */
