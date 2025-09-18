@@ -77,8 +77,6 @@ app.get('/api/visitas', (req, res) => {
   });
 });
 
-});
-
 
 
 //LLAMA APP para concola
