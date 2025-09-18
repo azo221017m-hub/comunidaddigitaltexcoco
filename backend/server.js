@@ -57,12 +57,13 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 
 // Ruta para obtener y aumentar visitas
 app.get('/api/visitas', (req, res) => {
-  // 1️⃣ Aumentar en 1 el contador
+  // 1Aumentar en 1 el contador
+
   const updateSql = 'UPDATE contador SET visitas = visitas + 1 WHERE id = 1';
   db.query(updateSql, (err) => {
     if (err) return res.status(500).json({ error: err.message });
 
-    // 2️⃣ Obtener el valor actualizado
+    // 2️Obtener el valor actualizado
     const selectSql = 'SELECT visitas FROM contador WHERE id = 1';
     db.query(selectSql, (err, results) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -74,6 +75,8 @@ app.get('/api/visitas', (req, res) => {
       }
     });
   });
+});
+
 });
 
 
