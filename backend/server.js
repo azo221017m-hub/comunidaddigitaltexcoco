@@ -33,21 +33,19 @@ const upload = multer({ storage: storage });
 
 
 // Ruta para registrar negocio
-app.post('/api/negocios', upload.single('imagen'), (req, res) => {
+app.post('/api/negocios', (req, res) => {
   console.log('📥 Llega POST /api/negocios');
   console.log('Campos recibidos:', req.body);
-  console.log('Archivo recibido:', req.file);
 
-  const { nombredenegocio, propietario, telnegocio, descripcionnegocio } = req.body;
-  const imagen = req.file ? req.file.filename : null;
+  const { nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio } = req.body;
 
   const sql = `
     INSERT INTO negociostbl
-    (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen, estatusnegocio)
-    VALUES (?, ?, ?, ?, ?, 0)
+    (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, estatusnegocio, fecharegistro)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())
   `;
 
-  db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen], (err, result) => {
+  db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio], (err, result) => {
     if (err) {
       console.error('Error al insertar en DB:', err);
       return res.status(500).send('❌ Error al guardar en DB');
@@ -59,7 +57,7 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 
 // Ruta para obtener negocios activos (estatusnegocio=1)
 app.get('/api/negocios', (req, res) => {
-  const sql = 'SELECT * FROM negociostbl WHERE estatusnegocio = 1';
+  const sql = 'SELECT id, nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, fecharegistro FROM negociostbl WHERE estatusnegocio = 1';
   db.query(sql, (err, results) => {
     if (err) {
       console.error('Error al obtener negocios:', err);

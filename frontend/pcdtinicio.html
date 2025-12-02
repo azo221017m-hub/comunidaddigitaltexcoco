@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad Digital Texcoco Ver 12.1</div>
+      <div class="brand">Comunidad Digital Texcoco Ver 12.2</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -62,7 +62,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
   </script>
              
       <!-- Botón Registro Gratis -->
-      <a href="#regForm" class="btn-register-header">Registro Gratis</a>
+      <button type="button" class="btn-register-header" onclick="toggleRegistroForm()">Registro Gratis</button>
       </div>
      </header>
 
@@ -100,23 +100,37 @@ async function loadNegocios() {
     carousel.innerHTML = '';
     
     negocios.forEach(negocio => {
-      const imageSrc = negocio.imagen 
-        ? `https://comunidaddigitaltexcoco.onrender.com/uploads/${encodeURIComponent(negocio.imagen)}` 
-        : 'img/logocdt.png';
+      // Use imagen1, imagen2, imagen3 as URLs for the carousel
+      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => img && img.trim() !== '');
+      const defaultImage = 'img/logocdt.png';
       
       const card = document.createElement('div');
       card.className = 'business-card';
       
-      // Create elements using DOM methods to prevent XSS
+      // Create slides container
       const slidesDiv = document.createElement('div');
       slidesDiv.className = 'slides';
-      const slideDiv = document.createElement('div');
-      slideDiv.className = 'slide active';
-      const img = document.createElement('img');
-      img.src = imageSrc;
-      img.alt = escapeHtml(negocio.nombredenegocio);
-      slideDiv.appendChild(img);
-      slidesDiv.appendChild(slideDiv);
+      
+      if (images.length > 0) {
+        images.forEach((imgUrl, index) => {
+          const slideDiv = document.createElement('div');
+          slideDiv.className = 'slide' + (index === 0 ? ' active' : '');
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          img.alt = escapeHtml(negocio.nombredenegocio);
+          img.onerror = function() { this.src = defaultImage; };
+          slideDiv.appendChild(img);
+          slidesDiv.appendChild(slideDiv);
+        });
+      } else {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'slide active';
+        const img = document.createElement('img');
+        img.src = defaultImage;
+        img.alt = escapeHtml(negocio.nombredenegocio);
+        slideDiv.appendChild(img);
+        slidesDiv.appendChild(slideDiv);
+      }
       
       const cardInfo = document.createElement('div');
       cardInfo.className = 'card-info';
@@ -201,7 +215,7 @@ loadNegocios();
     </div>
   </section>
 
-<section class="registro-container">
+<section class="registro-container" id="registroContainer" style="display: none;">
     <h2>Registra tu Negocio en nuestra Comunidad Digital</h2>
 
 
@@ -226,20 +240,45 @@ loadNegocios();
     <textarea id="descripcion" placeholder="Breve descripción..." required></textarea>
   </div>
 
-<div class="form-group">
-  
-  <!-- Input real oculto -->
-<input 
-  type="file" 
-  id="imagenes" 
-  name="imagen" 
-  accept="image/*"
-  onchange="validarMaximoImagenes(this)">
+  <div class="form-group">
+    <label for="tiponegocio">Tipo de negocio</label>
+    <select id="tiponegocio" required>
+      <option value="">Selecciona una opción</option>
+      <option value="VTA a GRANEL">VTA a GRANEL</option>
+      <option value="ABARROTES">ABARROTES</option>
+      <option value="ALIMENTO">ALIMENTO</option>
+      <option value="ACCESORIOS">ACCESORIOS</option>
+      <option value="SERVICIOS">SERVICIOS</option>
+      <option value="MASCOTAS">MASCOTAS</option>
+      <option value="CONSULTORIO">CONSULTORIO</option>
+      <option value="OTRO">OTRO</option>
+    </select>
+  </div>
 
-</div>
+  <div class="form-group">
+    <label for="imagen1">URL Imagen 1</label>
+    <input type="url" id="imagen1" placeholder="https://ejemplo.com/imagen1.jpg">
+  </div>
 
+  <div class="form-group">
+    <label for="imagen2">URL Imagen 2</label>
+    <input type="url" id="imagen2" placeholder="https://ejemplo.com/imagen2.jpg">
+  </div>
 
-  <button type="submit" class="btn-submit">Registrar mi negocio</button>
+  <div class="form-group">
+    <label for="imagen3">URL Imagen 3</label>
+    <input type="url" id="imagen3" placeholder="https://ejemplo.com/imagen3.jpg">
+  </div>
+
+  <div class="form-group">
+    <label for="ubinegocio">Ubicación (URL de Google Maps)</label>
+    <input type="url" id="ubinegocio" placeholder="https://maps.google.com/...">
+  </div>
+
+  <div style="display: flex; gap: 10px;">
+    <button type="submit" class="btn-submit">Registrar mi negocio</button>
+    <button type="button" class="btn-cancel" onclick="cancelarRegistro()">Cancelar</button>
+  </div>
 
 <div class="aviso-container">
   <span id="avisoToggle" class="aviso-link">AVISO DE PRIVACIDAD</span>
@@ -256,36 +295,61 @@ loadNegocios();
 </form>
 
 <script>
+// Toggle form visibility
+function toggleRegistroForm() {
+  const container = document.getElementById('registroContainer');
+  if (container.style.display === 'none' || container.style.display === '') {
+    container.style.display = 'block';
+    container.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    container.style.display = 'none';
+  }
+}
+
+// Cancel and hide form
+function cancelarRegistro() {
+  const form = document.getElementById('regForm');
+  form.reset();
+  document.getElementById('registroContainer').style.display = 'none';
+}
+
 const form = document.getElementById("regForm");
 
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const contacto = document.getElementById("contacto");
-  const nomnegocio = document.getElementById("nomnegocio");
-  const telefono = document.getElementById("telefono");
-  const descripcion = document.getElementById("descripcion");
-  const imagenes = document.getElementById("imagenes");
+  const contacto = document.getElementById("contacto").value;
+  const nomnegocio = document.getElementById("nomnegocio").value;
+  const telefono = document.getElementById("telefono").value;
+  const descripcion = document.getElementById("descripcion").value;
+  const tiponegocio = document.getElementById("tiponegocio").value;
+  const imagen1 = document.getElementById("imagen1").value;
+  const imagen2 = document.getElementById("imagen2").value;
+  const imagen3 = document.getElementById("imagen3").value;
+  const ubinegocio = document.getElementById("ubinegocio").value;
 
   try {
-    // 1️⃣ Enviar datos al backend
-    const formData = new FormData();
-    formData.append('nombredenegocio', nomnegocio.value);
-    formData.append('propietario', contacto.value);
-    formData.append('telnegocio', telefono.value);
-    formData.append('descripcionnegocio', descripcion.value);
-    if(imagenes.files.length > 0){
-      formData.append('imagen', imagenes.files[0]);
-    }
-
     const res = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios', {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nombredenegocio: nomnegocio,
+        propietario: contacto,
+        telnegocio: telefono,
+        descripcionnegocio: descripcion,
+        tiponegocio: tiponegocio,
+        imagen1: imagen1,
+        imagen2: imagen2,
+        imagen3: imagen3,
+        ubinegocio: ubinegocio
+      })
     });
 
     const msg = await res.text();
     console.log(msg);
-    alert(msg); // mostrar mensaje al usuario
+    alert(msg);
 
   } catch(err) {
     console.error('Error al guardar en DB:', err);
@@ -293,6 +357,7 @@ form.addEventListener("submit", async function(e) {
   }
 
   form.reset();
+  document.getElementById('registroContainer').style.display = 'none';
 });
 
 
