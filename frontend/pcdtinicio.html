@@ -91,6 +91,9 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// WeakMap to store slide interval references for cleanup
+const cardSlideIntervals = new WeakMap();
+
 // Load businesses from database (only those with estatusnegocio=1)
 async function loadNegocios() {
   const carousel = document.getElementById('bizCarousel');
@@ -107,7 +110,12 @@ async function loadNegocios() {
     
     negocios.forEach(negocio => {
       // Use imagen1, imagen2, imagen3 as URLs for the carousel
-      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => img && img.trim() !== '');
+      // Filter out null, undefined, empty strings, and the literal string "null"
+      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => {
+        if (!img || typeof img !== 'string') return false;
+        const trimmed = img.trim();
+        return trimmed !== '' && trimmed.toLowerCase() !== 'null';
+      });
       const defaultImage = 'img/logocdt.png';
       
       const card = document.createElement('div');
@@ -178,17 +186,26 @@ function initCardSlides() {
     const slides = card.querySelectorAll('.slide');
     if (slides.length <= 1) return;
     
-    let idx = 0, t;
+    // Clear any existing interval for this card using WeakMap
+    const existingInterval = cardSlideIntervals.get(card);
+    if (existingInterval) {
+      clearInterval(existingInterval);
+    }
+    
+    let idx = 0;
     function show(i) {
       slides.forEach((s, si) => s.classList.toggle('active', si === i));
     }
-    function start() {
-      t = setInterval(() => {
-        idx = (idx + 1) % slides.length;
-        show(idx);
-      }, 3000 + Math.random() * 1200);
-    }
-    start();
+    // Ensure first slide is active initially
+    show(0);
+    
+    const intervalId = setInterval(() => {
+      idx = (idx + 1) % slides.length;
+      show(idx);
+    }, 3000 + Math.random() * 1200);
+    
+    // Store interval reference in WeakMap for cleanup
+    cardSlideIntervals.set(card, intervalId);
     // Note: Image slideshow continues even when card is hovered
     // Only the carousel movement stops (via CSS animation-play-state)
   });
