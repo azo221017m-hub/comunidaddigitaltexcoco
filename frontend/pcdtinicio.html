@@ -97,9 +97,12 @@ const cardSlideIntervals = new WeakMap();
 // Load businesses from database (only those with estatusnegocio=1)
 async function loadNegocios() {
   const carousel = document.getElementById('bizCarousel');
+  const defaultImage = 'img/logocdt.png';
   try {
     const response = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios');
     const negocios = await response.json();
+    
+    console.log('📦 Negocios cargados desde BD:', negocios.length);
     
     if (negocios.length === 0) {
       carousel.innerHTML = '<p style="color:#fff;text-align:center;width:100%;">No hay negocios registrados aún.</p>';
@@ -108,7 +111,7 @@ async function loadNegocios() {
     
     carousel.innerHTML = '';
     
-    negocios.forEach(negocio => {
+    negocios.forEach((negocio, negocioIndex) => {
       // Use imagen1, imagen2, imagen3 as URLs for the carousel
       // Filter out null, undefined, empty strings, and the literal string "null"
       const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => {
@@ -116,10 +119,13 @@ async function loadNegocios() {
         const trimmed = img.trim();
         return trimmed !== '' && trimmed.toLowerCase() !== 'null';
       });
-      const defaultImage = 'img/logocdt.png';
+      
+      // Log image info for debugging
+      console.log(`🏪 Negocio ${negocioIndex + 1} (${negocio.nombredenegocio}): ${images.length} imágenes desde BD`, images);
       
       const card = document.createElement('div');
       card.className = 'business-card';
+      card.setAttribute('data-negocio-id', negocio.id);
       
       // Create slides container
       const slidesDiv = document.createElement('div');
@@ -182,8 +188,12 @@ async function loadNegocios() {
 }
 
 function initCardSlides() {
-  document.querySelectorAll('.business-card').forEach(card => {
+  document.querySelectorAll('.business-card').forEach((card, cardIndex) => {
     const slides = card.querySelectorAll('.slide');
+    const negocioId = card.getAttribute('data-negocio-id');
+    
+    console.log(`🎠 Inicializando slideshow para negocio ${negocioId}: ${slides.length} slides`);
+    
     if (slides.length <= 1) return;
     
     // Clear any existing interval for this card using WeakMap
