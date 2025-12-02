@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad Digital Texcoco Ver 9.38</div>
+      <div class="brand">Comunidad Digital Texcoco Ver 12.1</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -73,120 +73,109 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 <section class="business-grid">
 
 <div class="carousel-row" id="bizCarousel">
-
-
-
-    <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/logocdt.png" alt=""></div>
-        <div class="slide"><img src="img/logocdt2.png" alt=""></div>
-        <div class="slide"><img src="img/logocdt3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>COmunidad DIgital TExcoco</h3>
-        <p>Conecta con más clientes.</p>
-        <div class="loc">✍️ Registr0 GRATIS </div>
-      </div>
-    </div>
-
-
-
-    <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/dulcesabor.png" alt=""></div>
-        <div class="slide"><img src="img/dulcesabor2.png" alt=""></div>
-        <div class="slide"><img src="img/dulcesabor3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>Dulce Sabor del Recuerdo</h3>
-        <p> Pasteles, gelatinas, y recuerdos personalizados.</p>
-        <div class="loc">📞 5615720256</div>
-      </div>
-    </div>
-
-
-     <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/chuzamar.png" alt=""></div>
-        <div class="slide"><img src="img/chuzamar2.png" alt=""></div>
-        <div class="slide"><img src="img/chuzamar3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>Churrería      ZAMAR</h3>
-        <p> Elaboramos deliciosos y crujientes churros en Texcoco.</p>
-        <div class="loc">📞 5535569723</div>
-      </div>
-    </div>
-
-
-        <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/quirug.png" alt=""></div>
-        <div class="slide"><img src="img/quirug2.png" alt=""></div>
-        <div class="slide"><img src="img/quirug3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>Quirúrgicos Guillaume</h3>
-        <p>Venta de Uniformes Quirúrgicos  -Desde $100 pesos. tallas y piezas únicas 
-(Cherokee, Grey Anatomy, Figs, Landui, etc.) 
- Filipinas, pantalones , conjuntos quirúrgicos gorros y mucho más. 
- IG: QUIRÚRGICOS_GUILLAUME .</p>
-        <div class="loc">📞 5620270725</div>
-      </div>
-    </div>
-
-
-
-     <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/frannice.png" alt=""></div>
-        <div class="slide"><img src="img/frannice2.png" alt=""></div>
-        <div class="slide"><img src="img/frannice3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>Fran Nice</h3>
-        <p>Joyería mexicana de 4 baños de oro de 18 kilates, platino o cobalto. 
-          Piedras de cristal y/o diamonice .  </p>
-        <div class="loc">📞 5518247015</div>
-      </div>
-    </div>
-
-
-
-<div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/cupidopizza.png" alt=""></div>
-        <div class="slide"><img src="img/cupidopizza2.png" alt=""></div>
-        <div class="slide"><img src="img/cupidopizza3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>Cupido Pizza</h3>
-        <p>En Cupido Pizza elaboramos pizzas artesanales con ingredientes frescos, masa casera y un toque especial: el amor por lo que hacemos.
-Nuestro compromiso es brindar una experiencia gastronómica cálida, cuidada y llena de sabor.
-Somos una empresa local fundada por una pareja apasionada por compartir sabores auténticos y momentos memorables.</p>
-        <div class="loc">📞 5540106180</div>
-      </div>
-    </div>
-
-    
-
-    <div class="business-card">
-      <div class="slides">
-        <div class="slide active"><img src="img/logocdt.png" alt=""></div>
-        <div class="slide"><img src="img/logocdt2.png" alt=""></div>
-        <div class="slide"><img src="img/logocdt3.png" alt=""></div>
-      </div>
-      <div class="card-info">
-        <h3>COmunidad DIgital TExcoco</h3>
-        <p>Conecta con más clientes.</p>
-        <div class="loc">✍️ Registro GRATIS</div>
-      </div>
-    </div>
-
-
-
-    <!-- Puedes clonar más business-card según sea necesario -->
+    <!-- Business cards will be loaded dynamically from database -->
   </div>
+
+<script>
+// Helper function to escape HTML to prevent XSS
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Load businesses from database (only those with estatusnegocio=1)
+async function loadNegocios() {
+  const carousel = document.getElementById('bizCarousel');
+  try {
+    const response = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios');
+    const negocios = await response.json();
+    
+    if (negocios.length === 0) {
+      carousel.innerHTML = '<p style="color:#fff;text-align:center;width:100%;">No hay negocios registrados aún.</p>';
+      return;
+    }
+    
+    carousel.innerHTML = '';
+    
+    negocios.forEach(negocio => {
+      const imageSrc = negocio.imagen 
+        ? `https://comunidaddigitaltexcoco.onrender.com/uploads/${encodeURIComponent(negocio.imagen)}` 
+        : 'img/logocdt.png';
+      
+      const card = document.createElement('div');
+      card.className = 'business-card';
+      
+      // Create elements using DOM methods to prevent XSS
+      const slidesDiv = document.createElement('div');
+      slidesDiv.className = 'slides';
+      const slideDiv = document.createElement('div');
+      slideDiv.className = 'slide active';
+      const img = document.createElement('img');
+      img.src = imageSrc;
+      img.alt = escapeHtml(negocio.nombredenegocio);
+      slideDiv.appendChild(img);
+      slidesDiv.appendChild(slideDiv);
+      
+      const cardInfo = document.createElement('div');
+      cardInfo.className = 'card-info';
+      
+      const h3 = document.createElement('h3');
+      h3.textContent = negocio.nombredenegocio || '';
+      
+      const p = document.createElement('p');
+      p.textContent = negocio.descripcionnegocio || '';
+      
+      const loc = document.createElement('div');
+      loc.className = 'loc';
+      loc.textContent = '📞 ' + (negocio.telnegocio || '');
+      
+      cardInfo.appendChild(h3);
+      cardInfo.appendChild(p);
+      cardInfo.appendChild(loc);
+      
+      card.appendChild(slidesDiv);
+      card.appendChild(cardInfo);
+      carousel.appendChild(card);
+    });
+    
+    // Initialize slide animation for dynamically loaded cards
+    initCardSlides();
+  } catch (err) {
+    console.error('Error al cargar negocios:', err);
+    carousel.innerHTML = '<p style="color:#fff;text-align:center;width:100%;">Error al cargar negocios.</p>';
+  }
+}
+
+function initCardSlides() {
+  document.querySelectorAll('.business-card').forEach(card => {
+    const slides = card.querySelectorAll('.slide');
+    if (slides.length <= 1) return;
+    
+    let idx = 0, t;
+    function show(i) {
+      slides.forEach((s, si) => s.classList.toggle('active', si === i));
+    }
+    function start() {
+      t = setInterval(() => {
+        idx = (idx + 1) % slides.length;
+        show(idx);
+      }, 3000 + Math.random() * 1200);
+    }
+    function stop() {
+      clearInterval(t);
+    }
+    start();
+    card.addEventListener('mouseenter', () => stop());
+    card.addEventListener('mouseleave', () => start());
+  });
+}
+
+// Load negocios on page load
+loadNegocios();
+</script>
+
 </section>
 
 </main>
@@ -327,31 +316,6 @@ form.addEventListener("submit", async function(e) {
   let visitas = localStorage.getItem('contadorVisitas') || 0;
   visitas = parseInt(visitas) + 1;
   localStorage.setItem('contadorVisitas', visitas);
-
- 
-/* ---------- Card slides per card (auto-advance) ---------- */
-document.querySelectorAll('.business-card').forEach(card=>{
-  const slides = card.querySelectorAll('.slide');
-  let idx = 0, t;
-  function show(i){
-    slides.forEach((s,si)=> s.classList.toggle('active', si===i));
-  }
-  function start(){
-    t = setInterval(()=>{
-      idx = (idx+1) % slides.length;
-      show(idx);
-    }, 3000 + Math.random()*1200);
-  }
-  function stop(){
-    clearInterval(t);
-  }
-  // start auto-rotate
-  start();
-
-  // Stop rotating when hovering the card (so flip shows back)
-  card.addEventListener('mouseenter', ()=> stop());
-  card.addEventListener('mouseleave', ()=> start());
-});
 
 /* ---------- Mini slide in Comunidad (3 images) ---------- */
 (function(){

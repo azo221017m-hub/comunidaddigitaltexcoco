@@ -13,6 +13,9 @@ app.use(bodyParser.json());
 // Servir archivos estáticos (tu carpeta frontend)
 app.use(express.static('../frontend'));
 
+// Servir archivos de uploads (imágenes de negocios)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/mock.html'));
 });
@@ -40,8 +43,8 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
 
   const sql = `
     INSERT INTO negociostbl
-    (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen)
-    VALUES (?, ?, ?, ?, ?)
+    (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen, estatusnegocio)
+    VALUES (?, ?, ?, ?, ?, 0)
   `;
 
   db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen], (err, result) => {
@@ -50,6 +53,19 @@ app.post('/api/negocios', upload.single('imagen'), (req, res) => {
       return res.status(500).send('❌ Error al guardar en DB');
     }
     res.send('✅ Negocio registrado correctamente');
+  });
+});
+
+
+// Ruta para obtener negocios activos (estatusnegocio=1)
+app.get('/api/negocios', (req, res) => {
+  const sql = 'SELECT * FROM negociostbl WHERE estatusnegocio = 1';
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error al obtener negocios:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(results);
   });
 });
 
