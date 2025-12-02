@@ -36,7 +36,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad Digital Texcoco Ver 12.2</div>
+      <div class="brand">Comunidad Digital Texcoco Ver 12.3</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -261,18 +261,18 @@ loadNegocios();
   </div>
 
   <div class="form-group">
-    <label for="imagen1">URL Imagen 1</label>
-    <input type="url" id="imagen1" placeholder="https://ejemplo.com/imagen1.jpg">
+    <label for="imagen1">Imagen 1 (máx. 4MB)</label>
+    <input type="file" id="imagen1" accept="image/*">
   </div>
 
   <div class="form-group">
-    <label for="imagen2">URL Imagen 2</label>
-    <input type="url" id="imagen2" placeholder="https://ejemplo.com/imagen2.jpg">
+    <label for="imagen2">Imagen 2 (máx. 4MB)</label>
+    <input type="file" id="imagen2" accept="image/*">
   </div>
 
   <div class="form-group">
-    <label for="imagen3">URL Imagen 3</label>
-    <input type="url" id="imagen3" placeholder="https://ejemplo.com/imagen3.jpg">
+    <label for="imagen3">Imagen 3 (máx. 4MB)</label>
+    <input type="file" id="imagen3" accept="image/*">
   </div>
 
   <div class="form-group">
@@ -320,6 +320,9 @@ function cancelarRegistro() {
 
 const form = document.getElementById("regForm");
 
+// Max file size: 4MB
+const MAX_FILE_SIZE = 4 * 1024 * 1024;
+
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -328,28 +331,39 @@ form.addEventListener("submit", async function(e) {
   const telefono = document.getElementById("telefono").value;
   const descripcion = document.getElementById("descripcion").value;
   const tiponegocio = document.getElementById("tiponegocio").value;
-  const imagen1 = document.getElementById("imagen1").value;
-  const imagen2 = document.getElementById("imagen2").value;
-  const imagen3 = document.getElementById("imagen3").value;
   const ubinegocio = document.getElementById("ubinegocio").value;
+  
+  // Get file inputs
+  const imagen1File = document.getElementById("imagen1").files[0];
+  const imagen2File = document.getElementById("imagen2").files[0];
+  const imagen3File = document.getElementById("imagen3").files[0];
+  
+  // Validate file sizes (max 4MB each)
+  const files = [imagen1File, imagen2File, imagen3File].filter(f => f);
+  for (const file of files) {
+    if (file.size > MAX_FILE_SIZE) {
+      alert(`❌ El archivo "${file.name}" excede el límite de 4MB.`);
+      return;
+    }
+  }
+
+  // Create FormData for file upload
+  const formData = new FormData();
+  formData.append('nombredenegocio', nomnegocio);
+  formData.append('propietario', contacto);
+  formData.append('telnegocio', telefono);
+  formData.append('descripcionnegocio', descripcion);
+  formData.append('tiponegocio', tiponegocio);
+  formData.append('ubinegocio', ubinegocio);
+  
+  if (imagen1File) formData.append('imagen1', imagen1File);
+  if (imagen2File) formData.append('imagen2', imagen2File);
+  if (imagen3File) formData.append('imagen3', imagen3File);
 
   try {
     const res = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        nombredenegocio: nomnegocio,
-        propietario: contacto,
-        telnegocio: telefono,
-        descripcionnegocio: descripcion,
-        tiponegocio: tiponegocio,
-        imagen1: imagen1,
-        imagen2: imagen2,
-        imagen3: imagen3,
-        ubinegocio: ubinegocio
-      })
+      body: formData
     });
 
     const msg = await res.text();
