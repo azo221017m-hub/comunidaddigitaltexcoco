@@ -77,6 +77,14 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
   </div>
 
 <script>
+// Helper function to escape HTML to prevent XSS
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // Load businesses from database (only those with estatusnegocio=1)
 async function loadNegocios() {
   const carousel = document.getElementById('bizCarousel');
@@ -93,21 +101,42 @@ async function loadNegocios() {
     
     negocios.forEach(negocio => {
       const imageSrc = negocio.imagen 
-        ? `https://comunidaddigitaltexcoco.onrender.com/uploads/${negocio.imagen}` 
+        ? `https://comunidaddigitaltexcoco.onrender.com/uploads/${encodeURIComponent(negocio.imagen)}` 
         : 'img/logocdt.png';
       
       const card = document.createElement('div');
       card.className = 'business-card';
-      card.innerHTML = `
-        <div class="slides">
-          <div class="slide active"><img src="${imageSrc}" alt="${negocio.nombredenegocio}"></div>
-        </div>
-        <div class="card-info">
-          <h3>${negocio.nombredenegocio}</h3>
-          <p>${negocio.descripcionnegocio || ''}</p>
-          <div class="loc">📞 ${negocio.telnegocio || ''}</div>
-        </div>
-      `;
+      
+      // Create elements using DOM methods to prevent XSS
+      const slidesDiv = document.createElement('div');
+      slidesDiv.className = 'slides';
+      const slideDiv = document.createElement('div');
+      slideDiv.className = 'slide active';
+      const img = document.createElement('img');
+      img.src = imageSrc;
+      img.alt = escapeHtml(negocio.nombredenegocio);
+      slideDiv.appendChild(img);
+      slidesDiv.appendChild(slideDiv);
+      
+      const cardInfo = document.createElement('div');
+      cardInfo.className = 'card-info';
+      
+      const h3 = document.createElement('h3');
+      h3.textContent = negocio.nombredenegocio || '';
+      
+      const p = document.createElement('p');
+      p.textContent = negocio.descripcionnegocio || '';
+      
+      const loc = document.createElement('div');
+      loc.className = 'loc';
+      loc.textContent = '📞 ' + (negocio.telnegocio || '');
+      
+      cardInfo.appendChild(h3);
+      cardInfo.appendChild(p);
+      cardInfo.appendChild(loc);
+      
+      card.appendChild(slidesDiv);
+      card.appendChild(cardInfo);
       carousel.appendChild(card);
     });
     
