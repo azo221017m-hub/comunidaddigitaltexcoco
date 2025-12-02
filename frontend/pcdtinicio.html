@@ -98,6 +98,8 @@ async function loadNegocios() {
     const response = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios');
     const negocios = await response.json();
     
+    console.log('Negocios recibidos:', negocios);
+    
     if (negocios.length === 0) {
       carousel.innerHTML = '<p style="color:#fff;text-align:center;width:100%;">No hay negocios registrados aún.</p>';
       return;
@@ -107,7 +109,11 @@ async function loadNegocios() {
     
     negocios.forEach(negocio => {
       // Use imagen1, imagen2, imagen3 as URLs for the carousel
-      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => img && img.trim() !== '');
+      // Filter out null, undefined, empty strings, and the literal 'null' string
+      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => 
+        img && typeof img === 'string' && img.trim() !== '' && img.trim().toLowerCase() !== 'null'
+      );
+      console.log('Negocio:', negocio.nombredenegocio, 'Imágenes válidas:', images);
       const defaultImage = 'img/logocdt.png';
       
       const card = document.createElement('div');
@@ -117,16 +123,34 @@ async function loadNegocios() {
       const slidesDiv = document.createElement('div');
       slidesDiv.className = 'slides';
       
+      // Helper to normalize image URL
+      const getImageUrl = (url) => {
+        if (!url) return defaultImage;
+        // If it's already a full URL, use it directly
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+          return url;
+        }
+        // If it's a relative path starting with uploads/, prepend the base URL
+        if (url.startsWith('uploads/') || url.startsWith('/uploads/')) {
+          return 'https://comunidaddigitaltexcoco.onrender.com/' + url.replace(/^\//, '');
+        }
+        // Otherwise, assume it's a filename in uploads folder
+        return 'https://comunidaddigitaltexcoco.onrender.com/uploads/' + url;
+      };
+      
       if (images.length > 0) {
         images.forEach((imgUrl, index) => {
           const slideDiv = document.createElement('div');
           slideDiv.className = 'slide' + (index === 0 ? ' active' : '');
           const img = document.createElement('img');
-          img.src = imgUrl;
+          const normalizedUrl = getImageUrl(imgUrl);
+          console.log('Cargando imagen:', normalizedUrl);
+          img.src = normalizedUrl;
           img.alt = escapeHtml(negocio.nombredenegocio);
           img.onerror = function() { 
             if (!this.dataset.errorHandled) {
               this.dataset.errorHandled = 'true';
+              console.warn('Error cargando imagen:', this.src, '- usando imagen por defecto');
               this.src = defaultImage; 
             }
           };
