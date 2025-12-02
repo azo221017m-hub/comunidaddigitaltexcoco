@@ -167,7 +167,7 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 
 .mission-card { border-left: 4px solid var(--accent); }
 .vision-card { border-left: 4px solid var(--accent2); }
-.philosophy-card { border-left: 4px solid #c084fc; }
+.philosophy-card { border-left: 4px solid var(--bg3); }
 
 @keyframes slideInLeft {
   from {
@@ -186,10 +186,20 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 }
 
 .business-grid {
-  display: flex; justify-content:center; overflow:hidden;
-  padding:0; max-width:100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  max-width: 100%;
 }
-.carousel-row { display:flex; gap:20px; flex-wrap:nowrap;margin-top: 30px; animation: slideLeft 20s linear infinite; }
+
+.carousel-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: nowrap;
+  margin-top: 30px;
+  animation: slideLeft 20s linear infinite;
+}
 .business-card {
   flex:0 0 auto; width:300px; background: rgba(255,255,255,0.1);
   border-radius: var(--radius); box-shadow:0 8px 24px rgba(0,0,0,0.2);
