@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Comunidad Digital Texcoco - El pulso digital de Texcoco. Conecta, comparte ideas y desarrolla oportunidades para crecer juntos.">
+<meta name="keywords" content="CDT, CoDiTex, COmunidad DIgital Texcoco, Sistema Digital Texcoco">
+<meta name="author" content="Comunidad Digital Texcoco">
+<meta property="og:title" content="Comunidad Digital Texcoco">
+<meta property="og:description" content="El pulso digital de Texcoco. Conecta, comparte ideas y desarrolla oportunidades para crecer juntos.">
+<meta property="og:type" content="website">
 <title>Comunidad Digital Texcoco</title>
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link rel="stylesheet" href="css/style.css">
@@ -36,7 +42,7 @@
     <div class="logo" aria-label="logo">
       <!-- Cambia logocdt.png por tu imagen -->
       <img src=img/logocdt.png alt="Logo Proyecto">
-      <div class="brand">Comunidad Digital Texcoco Ver 12.3</div>
+      <div class="brand">Comunidad Digital Texcoco Ver 12.5</div>
     </div>
 
     <div class="center-section" aria-hidden="false">
@@ -182,12 +188,9 @@ function initCardSlides() {
         show(idx);
       }, 3000 + Math.random() * 1200);
     }
-    function stop() {
-      clearInterval(t);
-    }
     start();
-    card.addEventListener('mouseenter', () => stop());
-    card.addEventListener('mouseleave', () => start());
+    // Note: Image slideshow continues even when card is hovered
+    // Only the carousel movement stops (via CSS animation-play-state)
   });
 }
 
