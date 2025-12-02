@@ -106,13 +106,8 @@ async function loadNegocios() {
     carousel.innerHTML = '';
     
     negocios.forEach(negocio => {
-      // Use imagen1, imagen2, imagen3 as URLs for the carousel
-      // Filter out null, undefined, empty strings, and the literal 'null' string
-      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => {
-        if (!img || typeof img !== 'string') return false;
-        const trimmed = img.trim().toLowerCase();
-        return trimmed !== '' && trimmed !== 'null';
-      });
+      // Image source is frontend/img directory
+      // imagen1 = filename from DB, imagen2 = filename + "2", imagen3 = filename + "3"
       const defaultImage = 'img/logocdt.png';
       
       const card = document.createElement('div');
@@ -122,27 +117,39 @@ async function loadNegocios() {
       const slidesDiv = document.createElement('div');
       slidesDiv.className = 'slides';
       
-      // Helper to normalize image URL
-      const getImageUrl = (url) => {
-        if (!url) return defaultImage;
-        // If it's already a full URL, use it directly
-        if (url.startsWith('http://') || url.startsWith('https://')) {
-          return url;
+      // Helper to build image URL from filename stored in imagen1
+      // imagen1 = filename, imagen2 = filename + "2", imagen3 = filename + "3"
+      const getImageUrl = (filename, suffix) => {
+        if (!filename) return defaultImage;
+        // Remove any path prefix if present, get just the filename
+        const baseName = filename.split('/').pop();
+        if (!baseName) return defaultImage;
+        
+        // Add suffix before the file extension if provided
+        if (suffix) {
+          const dotIndex = baseName.lastIndexOf('.');
+          if (dotIndex > 0) {
+            const name = baseName.substring(0, dotIndex);
+            const ext = baseName.substring(dotIndex);
+            return 'img/' + name + suffix + ext;
+          }
+          return 'img/' + baseName + suffix;
         }
-        // If it's a relative path starting with uploads/, prepend the base URL
-        if (url.startsWith('uploads/') || url.startsWith('/uploads/')) {
-          return 'https://comunidaddigitaltexcoco.onrender.com/' + url.replace(/^\//, '');
-        }
-        // Otherwise, assume it's a filename in uploads folder
-        return 'https://comunidaddigitaltexcoco.onrender.com/uploads/' + url;
+        return 'img/' + baseName;
       };
       
-      if (images.length > 0) {
-        images.forEach((imgUrl, index) => {
+      // Build images array from imagen1: imagen1, imagen1+2, imagen1+3
+      // Image suffixes: '' for imagen1, '2' for imagen2, '3' for imagen3
+      const IMAGE_SUFFIXES = ['', '2', '3'];
+      const baseFilename = negocio.imagen1;
+      const trimmedFilename = baseFilename ? baseFilename.trim() : '';
+      if (trimmedFilename !== '' && trimmedFilename.toLowerCase() !== 'null') {
+        // Create three images from imagen1 filename
+        IMAGE_SUFFIXES.forEach((suffix, index) => {
           const slideDiv = document.createElement('div');
           slideDiv.className = 'slide' + (index === 0 ? ' active' : '');
           const img = document.createElement('img');
-          img.src = getImageUrl(imgUrl);
+          img.src = getImageUrl(baseFilename, suffix);
           img.alt = escapeHtml(negocio.nombredenegocio);
           img.onerror = function() { 
             if (!this.dataset.errorHandled) {
