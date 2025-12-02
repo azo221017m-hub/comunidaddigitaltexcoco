@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/mock.html'));
 });
 
-// Configuración Multer
+// Configuración Multer con límite de 4MB
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, 'uploads'));
@@ -29,7 +29,17 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 4 * 1024 * 1024 }, // 4MB limit
+  fileFilter: function (req, file, cb) {
+    // Accept images only
+    if (!file.mimetype.startsWith('image/')) {
+      return cb(new Error('Solo se permiten archivos de imagen.'), false);
+    }
+    cb(null, true);
+  }
+});
 
 
 // Helper function to validate URLs
@@ -43,19 +53,27 @@ function isValidUrl(string) {
   }
 }
 
-// Ruta para registrar negocio
-app.post('/api/negocios', (req, res) => {
+// Ruta para registrar negocio con imágenes
+app.post('/api/negocios', upload.fields([
+  { name: 'imagen1', maxCount: 1 },
+  { name: 'imagen2', maxCount: 1 },
+  { name: 'imagen3', maxCount: 1 }
+]), (req, res) => {
   console.log('📥 Llega POST /api/negocios');
   console.log('Campos recibidos:', req.body);
+  console.log('Archivos recibidos:', req.files);
 
-  const { nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio } = req.body;
+  const { nombredenegocio, propietario, telnegocio, descripcionnegocio, tiponegocio, ubinegocio } = req.body;
 
-  // Validate URL fields
-  const urlFields = { imagen1, imagen2, imagen3, ubinegocio };
-  for (const [field, value] of Object.entries(urlFields)) {
-    if (!isValidUrl(value)) {
-      return res.status(400).send(`❌ URL inválida en el campo: ${field}`);
-    }
+  // Get uploaded file paths (stored as URLs relative to /uploads)
+  const baseUrl = 'https://comunidaddigitaltexcoco.onrender.com/uploads/';
+  const imagen1 = req.files && req.files['imagen1'] ? baseUrl + req.files['imagen1'][0].filename : null;
+  const imagen2 = req.files && req.files['imagen2'] ? baseUrl + req.files['imagen2'][0].filename : null;
+  const imagen3 = req.files && req.files['imagen3'] ? baseUrl + req.files['imagen3'][0].filename : null;
+
+  // Validate URL field (only ubinegocio now)
+  if (!isValidUrl(ubinegocio)) {
+    return res.status(400).send('❌ URL inválida en el campo: ubinegocio');
   }
 
   const sql = `
@@ -64,7 +82,7 @@ app.post('/api/negocios', (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())
   `;
 
-  db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1 || null, imagen2 || null, imagen3 || null, tiponegocio, ubinegocio || null], (err, result) => {
+  db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio || null], (err, result) => {
     if (err) {
       console.error('Error al insertar en DB:', err);
       return res.status(500).send('❌ Error al guardar en DB');
