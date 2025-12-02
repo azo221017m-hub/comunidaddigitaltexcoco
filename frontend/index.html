@@ -119,10 +119,34 @@
   <img src="img/logocdt.png" alt="Comunidad Digital Texcoco">
   <h1>Bienvenido a Comunidad Digital Texcoco</h1>
   <p>Conecta tu negocio con clientes y otros emprendedores de Texcoco.</p>
-  <a href="pcdtinicio.html" class="btn-register">Registro Gratis</a>
+  <p id="loading-msg" style="margin-top:15px; font-size:0.9rem; opacity:0.8;">Conectando con el servidor...</p>
 </div>
 
 <script>
+// Validar disponibilidad del backend y redirigir si está disponible
+(async function checkBackendAvailability() {
+  const loadingMsg = document.getElementById('loading-msg');
+  try {
+    const response = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/visitas', {
+      method: 'GET',
+      mode: 'cors'
+    });
+    if (response.ok) {
+      // Backend disponible, mostrar mensaje y redirigir
+      loadingMsg.textContent = '¡Conectado! Redirigiendo...';
+      setTimeout(() => {
+        window.location.href = 'pcdtinicio.html';
+      }, 500);
+    } else {
+      loadingMsg.style.display = 'none';
+    }
+  } catch (err) {
+    // Backend no disponible, ocultar mensaje de carga
+    loadingMsg.style.display = 'none';
+    console.log('Backend no disponible, mostrando página de inicio...');
+  }
+})();
+
 // Fondo tipo red neuronal
 const canvas = document.getElementById("neuralNetwork");
 const ctx = canvas.getContext("2d");
