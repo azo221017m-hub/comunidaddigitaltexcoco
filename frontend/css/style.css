@@ -99,9 +99,95 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
 /* ===================== */
 /* Carrusel / Fichas de negocio */
 /* ===================== */
+.main-layout {
+  display: flex;
+  gap: 30px;
+  margin: 130px auto 40px;
+  padding: 0 20px;
+  max-width: 1400px;
+  align-items: flex-start;
+}
+
+.mvp-section {
+  flex: 0 0 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 120px;
+}
+
+.mvp-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  animation: slideInLeft 0.8s ease-out backwards;
+}
+
+.mvp-card:nth-child(1) { animation-delay: 0.1s; }
+.mvp-card:nth-child(2) { animation-delay: 0.3s; }
+.mvp-card:nth-child(3) { animation-delay: 0.5s; }
+
+.mvp-card:hover {
+  transform: translateX(10px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(147, 51, 234, 0.4);
+}
+
+.mvp-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.mvp-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mvp-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.9);
+  text-align: justify;
+}
+
+.mission-card { border-left: 4px solid var(--accent); }
+.vision-card { border-left: 4px solid var(--accent2); }
+.philosophy-card { border-left: 4px solid #c084fc; }
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.businesses-column {
+  flex: 1;
+  min-width: 0;
+}
+
 .business-grid {
   display: flex; justify-content:center; overflow:hidden;
-  margin:120px auto 40px; padding:0 20px; max-width:1200px;
+  padding:0; max-width:100%;
 }
 .carousel-row { display:flex; gap:20px; flex-wrap:nowrap;margin-top: 30px; animation: slideLeft 20s linear infinite; }
 .business-card {
@@ -269,4 +355,40 @@ footer.site-footer {
 @media (max-width:900px){
   header.navbar { flex-direction:row; gap:10px; height:100px; padding:12px; }
   .center-section { display:none; }
+  
+  .main-layout {
+    flex-direction: column;
+    margin-top: 120px;
+  }
+  
+  .mvp-section {
+    flex: 0 0 auto;
+    width: 100%;
+    position: relative;
+    top: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .mvp-card {
+    flex: 1 1 280px;
+    max-width: 350px;
+  }
+  
+  .businesses-column {
+    width: 100%;
+  }
+}
+
+@media (max-width:600px){
+  .mvp-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mvp-card {
+    width: 100%;
+    max-width: 100%;
+  }
 }
