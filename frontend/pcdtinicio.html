@@ -117,39 +117,28 @@ async function loadNegocios() {
       const slidesDiv = document.createElement('div');
       slidesDiv.className = 'slides';
       
-      // Helper to build image URL from filename stored in imagen1
-      // imagen1 = filename, imagen2 = filename + "2", imagen3 = filename + "3"
-      const getImageUrl = (filename, suffix) => {
+      // Helper to build image URL from filename
+      // imagen1, imagen2, imagen3 are filenames in frontend/img directory
+      const getImageUrl = (filename) => {
         if (!filename) return defaultImage;
         // Remove any path prefix if present, get just the filename
         const baseName = filename.split('/').pop();
         if (!baseName) return defaultImage;
-        
-        // Add suffix before the file extension if provided
-        if (suffix) {
-          const dotIndex = baseName.lastIndexOf('.');
-          if (dotIndex > 0) {
-            const name = baseName.substring(0, dotIndex);
-            const ext = baseName.substring(dotIndex);
-            return 'img/' + name + suffix + ext;
-          }
-          return 'img/' + baseName + suffix;
-        }
         return 'img/' + baseName;
       };
       
-      // Build images array from imagen1: imagen1, imagen1+2, imagen1+3
-      // Image suffixes: '' for imagen1, '2' for imagen2, '3' for imagen3
-      const IMAGE_SUFFIXES = ['', '2', '3'];
-      const baseFilename = negocio.imagen1;
-      const trimmedFilename = baseFilename ? baseFilename.trim() : '';
-      if (trimmedFilename !== '' && trimmedFilename.toLowerCase() !== 'null') {
-        // Create three images from imagen1 filename
-        IMAGE_SUFFIXES.forEach((suffix, index) => {
+      // Build images array from imagen1, imagen2, imagen3 fields
+      const imageFields = [negocio.imagen1, negocio.imagen2, negocio.imagen3];
+      let isFirstValidImage = true;
+      
+      imageFields.forEach((imageField) => {
+        const trimmedFilename = imageField ? imageField.trim() : '';
+        if (trimmedFilename !== '' && trimmedFilename.toLowerCase() !== 'null') {
           const slideDiv = document.createElement('div');
-          slideDiv.className = 'slide' + (index === 0 ? ' active' : '');
+          slideDiv.className = 'slide' + (isFirstValidImage ? ' active' : '');
+          isFirstValidImage = false;
           const img = document.createElement('img');
-          img.src = getImageUrl(baseFilename, suffix);
+          img.src = getImageUrl(imageField);
           img.alt = escapeHtml(negocio.nombredenegocio);
           img.onerror = function() { 
             if (!this.dataset.errorHandled) {
@@ -159,8 +148,11 @@ async function loadNegocios() {
           };
           slideDiv.appendChild(img);
           slidesDiv.appendChild(slideDiv);
-        });
-      } else {
+        }
+      });
+      
+      // If no valid images, show default
+      if (isFirstValidImage) {
         const slideDiv = document.createElement('div');
         slideDiv.className = 'slide active';
         const img = document.createElement('img');
