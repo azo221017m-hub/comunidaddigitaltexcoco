@@ -107,7 +107,12 @@ async function loadNegocios() {
     
     negocios.forEach(negocio => {
       // Use imagen1, imagen2, imagen3 as URLs for the carousel
-      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => img && img.trim() !== '');
+      // Filter out null, undefined, empty strings, and the literal 'null' string
+      const images = [negocio.imagen1, negocio.imagen2, negocio.imagen3].filter(img => {
+        if (!img || typeof img !== 'string') return false;
+        const trimmed = img.trim().toLowerCase();
+        return trimmed !== '' && trimmed !== 'null';
+      });
       const defaultImage = 'img/logocdt.png';
       
       const card = document.createElement('div');
@@ -117,12 +122,27 @@ async function loadNegocios() {
       const slidesDiv = document.createElement('div');
       slidesDiv.className = 'slides';
       
+      // Helper to normalize image URL
+      const getImageUrl = (url) => {
+        if (!url) return defaultImage;
+        // If it's already a full URL, use it directly
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+          return url;
+        }
+        // If it's a relative path starting with uploads/, prepend the base URL
+        if (url.startsWith('uploads/') || url.startsWith('/uploads/')) {
+          return 'https://comunidaddigitaltexcoco.onrender.com/' + url.replace(/^\//, '');
+        }
+        // Otherwise, assume it's a filename in uploads folder
+        return 'https://comunidaddigitaltexcoco.onrender.com/uploads/' + url;
+      };
+      
       if (images.length > 0) {
         images.forEach((imgUrl, index) => {
           const slideDiv = document.createElement('div');
           slideDiv.className = 'slide' + (index === 0 ? ' active' : '');
           const img = document.createElement('img');
-          img.src = imgUrl;
+          img.src = getImageUrl(imgUrl);
           img.alt = escapeHtml(negocio.nombredenegocio);
           img.onerror = function() { 
             if (!this.dataset.errorHandled) {
