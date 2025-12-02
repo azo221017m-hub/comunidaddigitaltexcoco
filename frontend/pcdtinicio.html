@@ -50,7 +50,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 
  <script>
     // Traer el contador desde la API
-    fetch('/api/visitas')
+    fetch('https://comunidaddigitaltexcoco.onrender.com/api/visitas')
       .then(response => response.json())
       .then(data => {
         document.getElementById('contador').textContent = `El sitio ha sido visitado ${data.visitas} veces.`;
@@ -61,6 +61,8 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
       });
   </script>
              
+      <!-- Botón Registro Gratis -->
+      <a href="#regForm" class="btn-register-header">Registro Gratis</a>
       </div>
      </header>
 

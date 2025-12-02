@@ -104,6 +104,7 @@ header.navbar .logo img { height:56px; width:auto; object-fit:contain; border-ra
   margin:120px auto 40px; padding:0 20px; max-width:1200px;
 }
 .carousel-row { display:flex; gap:20px; flex-wrap:nowrap;margin-top: 30px; animation: slideLeft 20s linear infinite; }
+.carousel-row:hover { animation-play-state: paused; }
 .business-card {
   flex:0 0 auto; width:300px; background: rgba(255,255,255,0.1);
   border-radius: var(--radius); box-shadow:0 8px 24px rgba(0,0,0,0.2);
@@ -269,4 +270,29 @@ footer.site-footer {
 @media (max-width:900px){
   header.navbar { flex-direction:row; gap:10px; height:100px; padding:12px; }
   .center-section { display:none; }
+}
+
+/* ===================== */
+/* Botón Registro Gratis en Header */
+/* ===================== */
+.btn-register-header {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #34d399, #10b981);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+.btn-register-header:hover {
+  background: linear-gradient(90deg, #10b981, #059669);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
