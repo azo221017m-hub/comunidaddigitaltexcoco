@@ -32,6 +32,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
+// Helper function to validate URLs
+function isValidUrl(string) {
+  if (!string || string.trim() === '') return true; // Empty is allowed
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 // Ruta para registrar negocio
 app.post('/api/negocios', (req, res) => {
   console.log('📥 Llega POST /api/negocios');
@@ -39,13 +50,21 @@ app.post('/api/negocios', (req, res) => {
 
   const { nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio } = req.body;
 
+  // Validate URL fields
+  const urlFields = { imagen1, imagen2, imagen3, ubinegocio };
+  for (const [field, value] of Object.entries(urlFields)) {
+    if (!isValidUrl(value)) {
+      return res.status(400).send(`❌ URL inválida en el campo: ${field}`);
+    }
+  }
+
   const sql = `
     INSERT INTO negociostbl
     (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, estatusnegocio, fecharegistro)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())
   `;
 
-  db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio], (err, result) => {
+  db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1 || null, imagen2 || null, imagen3 || null, tiponegocio, ubinegocio || null], (err, result) => {
     if (err) {
       console.error('Error al insertar en DB:', err);
       return res.status(500).send('❌ Error al guardar en DB');
