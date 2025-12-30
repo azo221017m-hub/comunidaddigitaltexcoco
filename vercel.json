@@ -1,24 +1,6 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/uploads/(.*)",
-      "dest": "/api/uploads/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
-    }
-  ],
-  "outputDirectory": "frontend"
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/frontend/$1" }
+  ]
 }
