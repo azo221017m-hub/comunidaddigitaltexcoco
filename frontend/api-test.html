@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test - Comunidad Digital Texcoco</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 { color: #333; }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #0070f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #0051cc;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8f8f8;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 300px;
+      overflow: auto;
+    }
+    .success { background: #e8f5e9; color: #2e7d32; }
+    .error { background: #ffebee; color: #c62828; }
+  </style>
+</head>
+<body>
+  <h1>🧪 API Test - Comunidad Digital Texcoco</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Visit Counter API</h2>
+    <p>Tests the <code>GET /api/visitas</code> endpoint</p>
+    <button onclick="testVisitas()">Test Visits Counter</button>
+    <div id="visitas-result" class="result" style="display:none;"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Get Businesses API</h2>
+    <p>Tests the <code>GET /api/negocios</code> endpoint</p>
+    <button onclick="testGetNegocios()">Test Get Businesses</button>
+    <div id="negocios-result" class="result" style="display:none;"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Register Business API</h2>
+    <p>Tests the <code>POST /api/negocios</code> endpoint (without file upload)</p>
+    <button onclick="testPostNegocio()">Test Register Business</button>
+    <div id="post-result" class="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    async function testVisitas() {
+      const resultDiv = document.getElementById('visitas-result');
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'result';
+      resultDiv.textContent = 'Testing...';
+
+      try {
+        const response = await fetch('/api/visitas');
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultDiv.className = 'result success';
+          resultDiv.textContent = '✅ Success!\n\n' + JSON.stringify(data, null, 2);
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.textContent = '❌ Error: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = '❌ Error: ' + error.message;
+      }
+    }
+
+    async function testGetNegocios() {
+      const resultDiv = document.getElementById('negocios-result');
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'result';
+      resultDiv.textContent = 'Testing...';
+
+      try {
+        const response = await fetch('/api/negocios');
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultDiv.className = 'result success';
+          resultDiv.textContent = '✅ Success!\n\nFound ' + data.length + ' businesses\n\n' + JSON.stringify(data, null, 2);
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.textContent = '❌ Error: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = '❌ Error: ' + error.message;
+      }
+    }
+
+    async function testPostNegocio() {
+      const resultDiv = document.getElementById('post-result');
+      resultDiv.style.display = 'block';
+      resultDiv.className = 'result';
+      resultDiv.textContent = 'Testing...';
+
+      const testData = {
+        nombredenegocio: 'Test Business ' + Date.now(),
+        propietario: 'Test Owner',
+        telnegocio: '555-1234',
+        descripcionnegocio: 'This is a test business',
+        tiponegocio: 'Test',
+        ubinegocio: 'https://maps.google.com',
+        imagen1: 'https://via.placeholder.com/150',
+        imagen2: null,
+        imagen3: null
+      };
+
+      try {
+        const response = await fetch('/api/negocios', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(testData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultDiv.className = 'result success';
+          resultDiv.textContent = '✅ Success!\n\n' + JSON.stringify(data, null, 2) + '\n\nSent data:\n' + JSON.stringify(testData, null, 2);
+        } else {
+          resultDiv.className = 'result error';
+          resultDiv.textContent = '❌ Error: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = '❌ Error: ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>

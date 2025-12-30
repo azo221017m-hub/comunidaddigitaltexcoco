@@ -37,9 +37,15 @@ module.exports = async (req, res) => {
     });
   } else if (req.method === 'POST') {
     // Register new business
-    // Note: File uploads are not directly supported in Vercel serverless functions
-    // This would need to be modified to use cloud storage (e.g., AWS S3, Cloudinary)
+    // NOTE: File uploads in Vercel require integration with cloud storage
+    // The frontend should handle uploading to cloud storage first, then send URLs here
+    
     const { nombredenegocio, propietario, telnegocio, descripcionnegocio, tiponegocio, ubinegocio, imagen1, imagen2, imagen3 } = req.body;
+
+    // Validate required fields
+    if (!nombredenegocio || !propietario || !telnegocio) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
 
     // Validate URL field
     if (!isValidUrl(ubinegocio)) {
@@ -55,9 +61,9 @@ module.exports = async (req, res) => {
     db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1 || null, imagen2 || null, imagen3 || null, tiponegocio, ubinegocio || null], (err, result) => {
       if (err) {
         console.error('Error al insertar en DB:', err);
-        return res.status(500).json({ error: 'Error al guardar en DB' });
+        return res.status(500).json({ error: 'Error al guardar en DB', details: err.message });
       }
-      res.status(200).json({ message: 'Negocio registrado correctamente' });
+      res.status(200).json({ message: '✅ Negocio registrado correctamente', id: result.insertId });
     });
   } else {
     res.status(405).json({ error: 'Method not allowed' });

@@ -32,11 +32,32 @@ This project has been configured to work with Vercel's serverless functions. Fol
 
 ### Important Notes
 
-- **File Uploads:** The current implementation does not support file uploads in Vercel serverless functions. To enable image uploads, you need to integrate a cloud storage service like:
-  - AWS S3
-  - Cloudinary
-  - Vercel Blob Storage
-  - ImageKit
+#### File Uploads Limitation
+
+**IMPORTANT:** The current file upload functionality will NOT work on Vercel by default. Vercel serverless functions have the following limitations:
+- Functions are stateless (uploaded files cannot be stored on the server)
+- The filesystem is read-only except for `/tmp`
+- `/tmp` storage is temporary and gets cleared
+
+**Temporary Workaround for Testing:**
+The main functionality (viewing businesses, visit counter) will work. The business registration form with images will need to be updated to use cloud storage.
+
+**Recommended Solutions:**
+1. **Vercel Blob Storage** (Recommended - easiest integration)
+   - https://vercel.com/docs/storage/vercel-blob
+   - Upload files directly from the frontend to Vercel Blob
+   - Then save the blob URLs to MySQL
+
+2. **Cloudinary** (Free tier available)
+   - https://cloudinary.com
+   - Use their upload widget in the frontend
+   - Store URLs in your database
+
+3. **AWS S3** (Enterprise solution)
+   - Use presigned URLs for direct uploads from frontend
+   - Store URLs in your database
+
+For now, the API accepts image URLs. You can manually test by providing image URLs instead of uploading files.
 
 - **Database Connection:** Make sure your MySQL database is accessible from Vercel's serverless functions. Some hosting providers require you to whitelist IP addresses or use connection pooling.
 
