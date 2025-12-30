@@ -1,0 +1,21 @@
+# Node modules
+node_modules
+backend/node_modules
+
+# Environment files (should be set in Vercel dashboard)
+.env
+backend/.env
+
+# Development files
+.vscode
+.vs
+cmd.exe
+comimit.txt
+
+# Backend server (not needed for serverless)
+backend/server.js
+backend/db.js
+
+# Uploads (should use cloud storage in production)
+backend/uploads
+uploads

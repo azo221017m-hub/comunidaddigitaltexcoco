@@ -56,7 +56,7 @@ conectan, comparten ideas y desarrollan oportunidades para crecer juntos...</div
 
  <script>
     // Traer el contador desde la API
-    fetch('https://comunidaddigitaltexcoco.onrender.com/api/visitas')
+    fetch('/api/visitas')
       .then(response => response.json())
       .then(data => {
         document.getElementById('contador').textContent = `El sitio ha sido visitado ${data.visitas} veces.`;
@@ -95,7 +95,7 @@ function escapeHtml(text) {
 async function loadNegocios() {
   const carousel = document.getElementById('bizCarousel');
   try {
-    const response = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios');
+    const response = await fetch('/api/negocios');
     const negocios = await response.json();
     
     if (negocios.length === 0) {
@@ -391,7 +391,7 @@ form.addEventListener("submit", async function(e) {
   if (imagen3File) formData.append('imagen3', imagen3File);
 
   try {
-    const res = await fetch('https://comunidaddigitaltexcoco.onrender.com/api/negocios', {
+    const res = await fetch('/api/negocios', {
       method: 'POST',
       body: formData
     });
