@@ -47,9 +47,16 @@ Una vez desplegado, prueba estos endpoints:
 
 ## ⚠️ Limitación Importante: Carga de Imágenes
 
+**ESTADO ACTUAL:** El formulario de registro de negocios intenta subir archivos usando FormData, pero esto NO funcionará en Vercel sin modificaciones adicionales.
+
 Las imágenes NO se pueden subir directamente en Vercel porque las funciones serverless:
 - Son sin estado (no guardan archivos)
 - Tienen sistema de archivos de solo lectura
+
+**Por ahora:**
+- ✅ El contador de visitas funciona
+- ✅ Ver negocios existentes funciona
+- ❌ Registrar nuevos negocios con imágenes NO funcionará hasta que implementes una de las soluciones siguientes
 
 ### Solución Recomendada: Vercel Blob Storage
 

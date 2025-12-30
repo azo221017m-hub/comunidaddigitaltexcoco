@@ -34,13 +34,17 @@ This project has been configured to work with Vercel's serverless functions. Fol
 
 #### File Uploads Limitation
 
+**CURRENT STATE:** The business registration form sends FormData with file uploads, but this will NOT work on Vercel without additional modifications.
+
 **IMPORTANT:** The current file upload functionality will NOT work on Vercel by default. Vercel serverless functions have the following limitations:
 - Functions are stateless (uploaded files cannot be stored on the server)
 - The filesystem is read-only except for `/tmp`
 - `/tmp` storage is temporary and gets cleared
 
-**Temporary Workaround for Testing:**
-The main functionality (viewing businesses, visit counter) will work. The business registration form with images will need to be updated to use cloud storage.
+**What Works Now:**
+- ✅ Visit counter
+- ✅ Viewing existing businesses
+- ❌ Registering new businesses with images (requires implementing one of the solutions below)
 
 **Recommended Solutions:**
 1. **Vercel Blob Storage** (Recommended - easiest integration)
