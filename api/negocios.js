@@ -1,5 +1,5 @@
 // api/negocios.js
-const db = require('./db');
+const { getConnection } = require('./db');
 
 // Helper function to validate URLs
 function isValidUrl(string) {
@@ -12,7 +12,7 @@ function isValidUrl(string) {
   }
 }
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,48 +24,64 @@ module.exports = (req, res) => {
     return;
   }
 
-  if (req.method === 'GET') {
-    // Get active businesses
-    const sql = 'SELECT id, nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, fecharegistro FROM negociostbl WHERE estatusnegocio = 1';
-    
-    db.query(sql, (err, results) => {
-      if (err) {
-        console.error('Error al obtener negocios:', err);
-        return res.status(500).json({ error: err.message });
-      }
+  let connection;
+  
+  try {
+    // Create a new connection for this request
+    connection = await getConnection();
+
+    if (req.method === 'GET') {
+      // Get active businesses
+      const sql = 'SELECT id, nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, fecharegistro FROM negociostbl WHERE estatusnegocio = 1';
+      
+      const [results] = await connection.execute(sql);
       res.status(200).json(results);
-    });
-  } else if (req.method === 'POST') {
-    // Register new business
-    // NOTE: File uploads in Vercel require integration with cloud storage
-    // The frontend should handle uploading to cloud storage first, then send URLs here
-    
-    const { nombredenegocio, propietario, telnegocio, descripcionnegocio, tiponegocio, ubinegocio, imagen1, imagen2, imagen3 } = req.body;
+    } else if (req.method === 'POST') {
+      // Register new business
+      // NOTE: File uploads in Vercel require integration with cloud storage
+      // The frontend should handle uploading to cloud storage first, then send URLs here
+      
+      const { nombredenegocio, propietario, telnegocio, descripcionnegocio, tiponegocio, ubinegocio, imagen1, imagen2, imagen3 } = req.body;
 
-    // Validate required fields
-    if (!nombredenegocio || !propietario || !telnegocio) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
-    }
-
-    // Validate URL field
-    if (!isValidUrl(ubinegocio)) {
-      return res.status(400).json({ error: 'URL inválida en el campo: ubinegocio' });
-    }
-
-    const sql = `
-      INSERT INTO negociostbl
-      (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, estatusnegocio, fecharegistro)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())
-    `;
-
-    db.query(sql, [nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1 || null, imagen2 || null, imagen3 || null, tiponegocio, ubinegocio || null], (err, result) => {
-      if (err) {
-        console.error('Error al insertar en DB:', err);
-        return res.status(500).json({ error: 'Error al guardar en DB', details: err.message });
+      // Validate required fields
+      if (!nombredenegocio || !propietario || !telnegocio) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios' });
       }
+
+      // Validate URL field
+      if (!isValidUrl(ubinegocio)) {
+        return res.status(400).json({ error: 'URL inválida en el campo: ubinegocio' });
+      }
+
+      const sql = `
+        INSERT INTO negociostbl
+        (nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, estatusnegocio, fecharegistro)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())
+      `;
+
+      const [result] = await connection.execute(sql, [
+        nombredenegocio, 
+        propietario, 
+        telnegocio, 
+        descripcionnegocio, 
+        imagen1 || null, 
+        imagen2 || null, 
+        imagen3 || null, 
+        tiponegocio, 
+        ubinegocio || null
+      ]);
+      
       res.status(200).json({ message: '✅ Negocio registrado correctamente', id: result.insertId });
-    });
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    } else {
+      res.status(405).json({ error: 'Method not allowed' });
+    }
+  } catch (err) {
+    console.error('Error en negocios API:', err);
+    res.status(500).json({ error: 'Error al procesar solicitud', details: err.message });
+  } finally {
+    // Always close the connection
+    if (connection) {
+      await connection.end();
+    }
   }
 };

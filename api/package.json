@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Serverless API functions for Vercel deployment",
   "dependencies": {
-    "mysql": "^2.18.1",
     "mysql2": "^3.14.4"
   }
 }

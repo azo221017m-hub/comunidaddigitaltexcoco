@@ -1,7 +1,7 @@
 // api/visitas.js
-const db = require('./db');
+const { getConnection } = require('./db');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,30 +14,33 @@ module.exports = (req, res) => {
   }
 
   if (req.method === 'GET') {
-    // Increase counter by 1
-    const updateSql = 'UPDATE contador SET visitas = visitas + 1 WHERE id = 1';
-    
-    db.query(updateSql, (err) => {
-      if (err) {
-        console.error('Error updating visits:', err);
-        return res.status(500).json({ error: err.message });
-      }
+    let connection;
+    try {
+      // Create a new connection for this request
+      connection = await getConnection();
+
+      // Increase counter by 1
+      const updateSql = 'UPDATE contador SET visitas = visitas + 1 WHERE id = 1';
+      await connection.execute(updateSql);
 
       // Get the updated value
       const selectSql = 'SELECT visitas FROM contador WHERE id = 1';
-      db.query(selectSql, (err, results) => {
-        if (err) {
-          console.error('Error getting visits:', err);
-          return res.status(500).json({ error: err.message });
-        }
+      const [results] = await connection.execute(selectSql);
 
-        if (results.length > 0) {
-          res.status(200).json({ visitas: results[0].visitas });
-        } else {
-          res.status(200).json({ visitas: 0 });
-        }
-      });
-    });
+      if (results.length > 0) {
+        res.status(200).json({ visitas: results[0].visitas });
+      } else {
+        res.status(200).json({ visitas: 0 });
+      }
+    } catch (err) {
+      console.error('Error with visits:', err);
+      res.status(500).json({ error: err.message });
+    } finally {
+      // Always close the connection
+      if (connection) {
+        await connection.end();
+      }
+    }
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
