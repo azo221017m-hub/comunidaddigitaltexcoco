@@ -24,6 +24,21 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Validate before creating connection
+  if (req.method === 'POST') {
+    const { nombredenegocio, propietario, telnegocio, ubinegocio } = req.body;
+
+    // Validate required fields
+    if (!nombredenegocio || !propietario || !telnegocio) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+
+    // Validate URL field
+    if (!isValidUrl(ubinegocio)) {
+      return res.status(400).json({ error: 'URL inválida en el campo: ubinegocio' });
+    }
+  }
+
   let connection;
   
   try {
@@ -42,16 +57,6 @@ module.exports = async (req, res) => {
       // The frontend should handle uploading to cloud storage first, then send URLs here
       
       const { nombredenegocio, propietario, telnegocio, descripcionnegocio, tiponegocio, ubinegocio, imagen1, imagen2, imagen3 } = req.body;
-
-      // Validate required fields
-      if (!nombredenegocio || !propietario || !telnegocio) {
-        return res.status(400).json({ error: 'Faltan campos obligatorios' });
-      }
-
-      // Validate URL field
-      if (!isValidUrl(ubinegocio)) {
-        return res.status(400).json({ error: 'URL inválida en el campo: ubinegocio' });
-      }
 
       const sql = `
         INSERT INTO negociostbl
