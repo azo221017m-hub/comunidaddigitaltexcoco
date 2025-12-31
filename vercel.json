@@ -2,9 +2,6 @@
   "version": 2,
   "buildCommand": null,
   "rewrites": [
-    { "source": "/api/negocios", "destination": "/api/negocios" },
-    { "source": "/api/visitas", "destination": "/api/visitas" },
-    { "source": "/api", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/frontend/$1" }
   ]
 }
