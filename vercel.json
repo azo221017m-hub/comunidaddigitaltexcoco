@@ -7,10 +7,6 @@
       "dest": "/api/$1"
     },
     {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|webp|html))",
-      "dest": "/frontend/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }

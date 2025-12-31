@@ -19,18 +19,27 @@ module.exports = async (req, res) => {
       // Create a new connection for this request
       connection = await getConnection();
 
-      // Increase counter by 1
-      const updateSql = 'UPDATE contador SET visitas = visitas + 1 WHERE id = 1';
-      await connection.execute(updateSql);
+      // Use a transaction to ensure atomicity
+      await connection.beginTransaction();
 
-      // Get the updated value
-      const selectSql = 'SELECT visitas FROM contador WHERE id = 1';
-      const [results] = await connection.execute(selectSql);
+      try {
+        // Increase counter by 1
+        await connection.execute('UPDATE contador SET visitas = visitas + 1 WHERE id = 1');
 
-      if (results.length > 0) {
-        res.status(200).json({ visitas: results[0].visitas });
-      } else {
-        res.status(200).json({ visitas: 0 });
+        // Get the updated value
+        const [results] = await connection.execute('SELECT visitas FROM contador WHERE id = 1');
+
+        await connection.commit();
+
+        if (results.length > 0) {
+          res.status(200).json({ visitas: results[0].visitas });
+        } else {
+          res.status(200).json({ visitas: 0 });
+        }
+      } catch (err) {
+        // Rollback transaction on error
+        await connection.rollback();
+        throw err;
       }
     } catch (err) {
       console.error('Error with visits:', err);
