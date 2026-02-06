@@ -217,33 +217,52 @@ async function loadNegocios() {
           linkButton.style.backgroundColor = '#3b82f6';
         });
         
-        linkButton.addEventListener('click', async (e) => {
+        linkButton.addEventListener('click', (e) => {
           e.stopPropagation();
           
-          // Increment counter
-          try {
-            const response = await fetch('/api/link-click', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ negocioId: negocio.id })
-            });
-            
-            if (response.ok) {
-              const data = await response.json();
-              // Update counter display
-              const counterSpan = linkContainer.querySelector('.visits-counter');
-              if (counterSpan) {
-                counterSpan.textContent = 'VisitasWEB: ' + (data.contadorlink1 || 0);
-              }
-            }
-          } catch (err) {
-            console.error('Error al incrementar contador:', err);
+          // Validate URL to prevent security issues
+          let url = negocio.link1.trim();
+          
+          // Prepend https:// if no protocol is specified
+          if (!url.match(/^https?:\/\//i)) {
+            url = 'https://' + url;
           }
           
-          // Open URL in new tab
-          window.open(negocio.link1, '_blank');
+          try {
+            const urlObj = new URL(url);
+            // Only allow http and https protocols
+            if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+              console.error('Invalid protocol:', urlObj.protocol);
+              return;
+            }
+          } catch (err) {
+            console.error('Invalid URL:', url);
+            return;
+          }
+          
+          // Open URL immediately (non-blocking) with security attributes
+          const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+          if (newWindow) newWindow.opener = null;
+          
+          // Increment counter asynchronously (don't wait)
+          fetch('/api/link-click', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ negocioId: negocio.id })
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Update counter display
+            const counterSpan = linkContainer.querySelector('.visits-counter');
+            if (counterSpan) {
+              counterSpan.textContent = 'VisitasWEB: ' + (data.contadorlink1 || 0);
+            }
+          })
+          .catch(err => {
+            console.error('Error al incrementar contador:', err);
+          });
         });
         
         const counterSpan = document.createElement('span');
