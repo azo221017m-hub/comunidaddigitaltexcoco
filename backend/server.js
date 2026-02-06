@@ -94,7 +94,7 @@ app.post('/api/negocios', upload.fields([
 
 // Ruta para obtener negocios activos (estatusnegocio=1)
 app.get('/api/negocios', (req, res) => {
-  const sql = 'SELECT id, nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, fecharegistro FROM negociostbl WHERE estatusnegocio = 1';
+  const sql = 'SELECT id, nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, link1, contadorlink1, fecharegistro FROM negociostbl WHERE estatusnegocio = 1';
   db.query(sql, (err, results) => {
     if (err) {
       console.error('Error al obtener negocios:', err);
@@ -105,6 +105,42 @@ app.get('/api/negocios', (req, res) => {
 });
 
 
+
+// Ruta para incrementar contador de link1
+app.post('/api/link-click', express.json(), (req, res) => {
+  const { negocioId } = req.body;
+
+  if (!negocioId) {
+    return res.status(400).json({ error: 'negocioId es requerido' });
+  }
+
+  // Increment contadorlink1 (treat NULL as 0)
+  const updateSql = 'UPDATE negociostbl SET contadorlink1 = COALESCE(contadorlink1, 0) + 1 WHERE id = ?';
+  db.query(updateSql, [negocioId], (err, result) => {
+    if (err) {
+      console.error('Error al incrementar contador:', err);
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Negocio no encontrado' });
+    }
+
+    // Get the updated counter value
+    const selectSql = 'SELECT contadorlink1 FROM negociostbl WHERE id = ?';
+    db.query(selectSql, [negocioId], (err, results) => {
+      if (err) {
+        console.error('Error al obtener contador:', err);
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({ 
+        success: true, 
+        contadorlink1: results[0]?.contadorlink1 || 0 
+      });
+    });
+  });
+});
 
 // Ruta para obtener y aumentar visitas
 app.get('/api/visitas', (req, res) => {

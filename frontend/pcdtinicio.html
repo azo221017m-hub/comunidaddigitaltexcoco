@@ -187,6 +187,96 @@ async function loadNegocios() {
       cardInfo.appendChild(p);
       cardInfo.appendChild(loc);
       
+      // Add web link button if link1 exists
+      if (negocio.link1 && negocio.link1.trim() !== '') {
+        const linkContainer = document.createElement('div');
+        linkContainer.className = 'link-container';
+        linkContainer.style.marginTop = '8px';
+        linkContainer.style.display = 'flex';
+        linkContainer.style.justifyContent = 'center';
+        linkContainer.style.alignItems = 'center';
+        linkContainer.style.gap = '10px';
+        
+        const linkButton = document.createElement('button');
+        linkButton.className = 'btn-web-link';
+        linkButton.innerHTML = '🔗 Web';
+        linkButton.style.backgroundColor = '#3b82f6';
+        linkButton.style.color = '#fff';
+        linkButton.style.border = 'none';
+        linkButton.style.padding = '6px 12px';
+        linkButton.style.borderRadius = '4px';
+        linkButton.style.cursor = 'pointer';
+        linkButton.style.fontSize = '0.85rem';
+        linkButton.style.fontWeight = 'bold';
+        linkButton.style.transition = 'background-color 0.3s';
+        
+        linkButton.addEventListener('mouseenter', () => {
+          linkButton.style.backgroundColor = '#2563eb';
+        });
+        linkButton.addEventListener('mouseleave', () => {
+          linkButton.style.backgroundColor = '#3b82f6';
+        });
+        
+        linkButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          // Validate URL to prevent security issues
+          let url = negocio.link1.trim();
+          
+          // Prepend https:// if no protocol is specified
+          if (!url.match(/^https?:\/\//i)) {
+            url = 'https://' + url;
+          }
+          
+          try {
+            const urlObj = new URL(url);
+            // Only allow http and https protocols
+            if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+              console.error('Invalid protocol:', urlObj.protocol);
+              return;
+            }
+          } catch (err) {
+            console.error('Invalid URL:', url);
+            return;
+          }
+          
+          // Open URL immediately (non-blocking) with security attributes
+          const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+          if (newWindow) newWindow.opener = null;
+          
+          // Increment counter asynchronously (don't wait)
+          fetch('/api/link-click', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ negocioId: negocio.id })
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Update counter display
+            const counterSpan = linkContainer.querySelector('.visits-counter');
+            if (counterSpan) {
+              counterSpan.textContent = 'VisitasWEB: ' + (data.contadorlink1 || 0);
+            }
+          })
+          .catch(err => {
+            console.error('Error al incrementar contador:', err);
+          });
+        });
+        
+        const counterSpan = document.createElement('span');
+        counterSpan.className = 'visits-counter';
+        counterSpan.textContent = 'VisitasWEB: ' + (negocio.contadorlink1 || 0);
+        counterSpan.style.fontSize = '0.75rem';
+        counterSpan.style.color = '#34d399';
+        counterSpan.style.fontWeight = 'bold';
+        
+        linkContainer.appendChild(linkButton);
+        linkContainer.appendChild(counterSpan);
+        cardInfo.appendChild(linkContainer);
+      }
+      
       card.appendChild(slidesDiv);
       card.appendChild(cardInfo);
       carousel.appendChild(card);

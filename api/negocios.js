@@ -47,7 +47,7 @@ module.exports = async (req, res) => {
 
     if (req.method === 'GET') {
       // Get active businesses
-      const sql = 'SELECT id, nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, fecharegistro FROM negociostbl WHERE estatusnegocio = 1';
+      const sql = 'SELECT id, nombredenegocio, propietario, telnegocio, descripcionnegocio, imagen1, imagen2, imagen3, tiponegocio, ubinegocio, link1, contadorlink1, fecharegistro FROM negociostbl WHERE estatusnegocio = 1';
       
       const [results] = await connection.execute(sql);
       res.status(200).json(results);
